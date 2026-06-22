@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(uv sync:*)",
+      "Bash(uv run main.py:*)",
+      "Bash(uv run ruff:*)"
+    ],
+    "deny": [
+      "Edit(uv.lock)",
+      "Write(uv.lock)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ruff check --fix . && uv run ruff format ."
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "astral@astral-sh": true,
+    "commit-commands@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "astral-sh": {
+      "source": {
+        "source": "github",
+        "repo": "astral-sh/claude-code-plugins"
+      }
+    }
+  }
+}
