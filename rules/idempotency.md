@@ -25,7 +25,7 @@ So "make it safe to run twice" is not a niche distributed-systems nicety — it 
 
 - **Converge to a state; don't blindly apply a delta.** Prefer `set quantity = 5` over `add 1`, and upsert over insert. State-convergent operations are idempotent by construction.
 - **Use idempotency keys for unavoidable side effects.** When the action genuinely creates something external (a payment, an email), let the caller pass a key the operation deduplicates on, so a retry with the same key is a no-op that returns the original result.
-- **Keep operations stateless.** Hold no required state in process memory between calls; derive everything from inputs and durable storage. Stateless operations retry, resume, parallelize, and restart freely.
+- **Keep operations stateless.** Hold no required state in process memory between calls; derive everything from inputs and durable storage.
 - **Design for interruption.** Assume the process can die at any point. Use transactions or atomic writes so a partial run leaves no half-applied state, and checkpoint long work so it resumes instead of restarting from zero.
 - **Make retry the safe default for tools you hand an agent.** A tool should be retryable without the caller having to remember whether it already ran — the safety lives in the operation, not in the caller's memory.
 - **Isolate and guard the genuinely non-idempotent core.** Where an operation truly cannot be made idempotent, name that, and put [anti-foot-gun](anti-foot-gun.md) guardrails on it (explicit opt-in, confirmation) so a reflexive retry can't reach it.
