@@ -6,9 +6,9 @@
 
 An operation is *idempotent* when applying it more than once has the same effect as applying it once. A process is *disposable* when it can be killed at any moment and restarted without corrupting state or losing work. These are one discipline seen from two angles: design operations so that **repetition is harmless** and **interruption is recoverable**.
 
-The enabler for both is **statelessness** — an operation that carries no hidden, in-process state between calls can be retried, resumed, parallelized, and restarted without coordination.
+The enabler for both is **statelessness** — an operation that carries no hidden, in-process state between calls can be retried, resumed, and restarted from durable state alone.
 
-The key move is to make the *result* depend on the inputs and the target's current state, not on how many times the operation has run or whether a previous run finished. "Create user X" run twice should converge to one user X — not two, and not an error — via an upsert, a unique constraint, or a natural idempotency key, rather than blindly appending.
+The key move is to make the *result* depend on the inputs and the target's current state, not on how many times the operation has run or whether a previous run finished. "Create user X" run twice should converge to one user X — not two, and not an error — via an upsert (or an insert that treats a uniqueness conflict as success), or a natural idempotency key, rather than blindly appending.
 
 ## Why it matters for agentic development
 
@@ -34,8 +34,8 @@ So "make it safe to run twice" is not a niche distributed-systems nicety — it 
 
 | Footgun | Idempotent |
 |---------|------------|
-| `balance += amount` applied per call | `balance` derived from durable state, or deduped on an idempotency key |
-| `INSERT` that duplicates or errors on the second run | `UPSERT`, or insert guarded by a unique constraint |
+| `balance += amount` applied per call | `balance` recomputed from an append-only ledger of keyed entries (a replay is a no-op), or each delta deduped on an idempotency key |
+| `INSERT` that duplicates or errors on the second run | `UPSERT`, or an insert that treats a uniqueness conflict as success (e.g. `ON CONFLICT DO NOTHING`) |
 | A `send_email(...)` tool an agent retries into duplicate sends | Dedup on a message key; a retry returns the original send |
 | Required state held in process memory between calls | State in durable storage; the process carries none |
 | A long job that restarts from zero after a crash | Checkpointed, transactional work that resumes from the last good point |
