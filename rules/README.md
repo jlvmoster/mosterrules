@@ -9,6 +9,7 @@ Each rule lives in its own file and follows the same shape: a one-line statement
 | # | Rule | Principle |
 |---|------|-----------|
 | 1 | [Anti-Foot-Gun](anti-foot-gun.md) | Make the dangerous path hard to take by accident; design footguns out instead of documenting around them. |
+| 2 | [Idempotency](idempotency.md) | Make an operation safe to run again and safe to interrupt; running it twice equals running it once. |
 
 ## Conventions
 
