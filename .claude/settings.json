@@ -4,7 +4,8 @@
     "allow": [
       "Bash(uv sync:*)",
       "Bash(uv run main.py:*)",
-      "Bash(uv run ruff:*)"
+      "Bash(uv run ruff:*)",
+      "Bash(uv run ty:*)"
     ],
     "deny": [
       "Edit(uv.lock)",
@@ -18,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run ruff check --fix . && uv run ruff format ."
+            "command": "uv run ruff check --fix . && uv run ruff format . && uv run ty check"
           }
         ]
       }
