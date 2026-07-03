@@ -23,26 +23,14 @@ So "make it safe to run twice" is not a niche distributed-systems nicety — it 
 
 ## How to apply
 
-- **Converge to a state; don't blindly apply a delta.** Prefer `set quantity = 5` over `add 1`, and upsert over insert. State-convergent operations are idempotent by construction.
+- **Converge to a state; don't blindly apply a delta.** Prefer `set quantity = 5` over `add 1`, and upsert over insert. State-convergent operations are idempotent by construction; where you must accumulate, recompute from an append-only ledger of keyed entries so a replay is a no-op.
 - **Use idempotency keys for unavoidable side effects.** When the action genuinely creates something external (a payment, an email), let the caller pass a key the operation deduplicates on, so a retry with the same key is a no-op that returns the original result.
 - **Keep operations stateless.** Hold no required state in process memory between calls; derive everything from inputs and durable storage.
 - **Design for interruption.** Assume the process can die at any point. Use transactions or atomic writes so a partial run leaves no half-applied state, and checkpoint long work so it resumes instead of restarting from zero.
 - **Make retry the safe default for tools you hand an agent.** A tool should be retryable without the caller having to remember whether it already ran — the safety lives in the operation, not in the caller's memory.
 - **Isolate and guard the genuinely non-idempotent core.** Where an operation truly cannot be made idempotent, name that, and put [anti-foot-gun](anti-foot-gun.md) guardrails on it (explicit opt-in, confirmation) so a reflexive retry can't reach it.
 
-## Anti-patterns
-
-| Footgun | Idempotent |
-|---------|------------|
-| `balance += amount` applied per call | `balance` recomputed from an append-only ledger of keyed entries (a replay is a no-op), or each delta deduped on an idempotency key |
-| `INSERT` that duplicates or errors on the second run | `UPSERT`, or an insert that treats a uniqueness conflict as success (e.g. `ON CONFLICT DO NOTHING`) |
-| A `send_email(...)` tool an agent retries into duplicate sends | Dedup on a message key; a retry returns the original send |
-| Required state held in process memory between calls | State in durable storage; the process carries none |
-| A long job that restarts from zero after a crash | Checkpointed, transactional work that resumes from the last good point |
-| "Don't run this twice" in a docstring | An operation that *is* safe to run twice |
-
 ## References
 
 - [The Twelve-Factor App](https://12factor.net/) — esp. factor VI (stateless processes) and factor IX (disposability)
-- [Idempotence — Wikipedia](https://en.wikipedia.org/wiki/Idempotence)
 - [Stripe: Idempotent Requests](https://docs.stripe.com/api/idempotent_requests)

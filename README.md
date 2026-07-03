@@ -14,12 +14,7 @@ The **Moster Rules** — principles for *Agentic Software Development* (building
 
 ## The Moster Rules
 
-See [`rules/README.md`](rules/README.md) for the full index. Each rule is a one-line statement, the principle, why it matters for agentic work, how to apply it, and anti-patterns.
-
-| # | Rule | Principle |
-|---|------|-----------|
-| 1 | [Anti-Foot-Gun](rules/anti-foot-gun.md) | Make the dangerous path hard to take by accident; design footguns out instead of documenting around them. |
-| 2 | [Idempotency](rules/idempotency.md) | Make an operation safe to run again and safe to interrupt; running it twice equals running it once. |
+See [`rules/README.md`](rules/README.md) for the full index. Each rule is a one-line statement, the principle, why it matters for agentic work, how to apply it, and references.
 
 ## Getting started
 
