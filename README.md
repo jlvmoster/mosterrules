@@ -46,20 +46,31 @@ Use `uv` for all dependency and environment operations — do not call `pip` dir
 
 ## Recommended Claude Code plugins
 
-These are declared in [`.claude/settings.json`](.claude/settings.json), so when you open this repo in Claude Code it will offer to enable them (the two custom marketplaces below are pre-registered in the same file). To browse or install manually, run `/plugin`.
+### Project scope (this repo)
+
+These are declared in [`.claude/settings.json`](.claude/settings.json), so when you open this repo in Claude Code it will offer to enable them (the custom `astral-sh` marketplace below is pre-registered in the same file). To browse or install manually, run `/plugin`.
 
 | Plugin | Marketplace | What it gives you |
 |--------|-------------|-------------------|
-| **ponytail** | [`DietrichGebert/ponytail`](https://github.com/DietrichGebert/ponytail) | "Lazy senior dev" mode — pushes the simplest solution that works and guards against over-engineering |
 | **astral** | [`astral-sh/claude-code-plugins`](https://github.com/astral-sh/claude-code-plugins) | Skills for `uv`, `ruff`, and `ty` — the exact toolchain this repo uses |
 | **context7** | official | Fetches up-to-date library/framework/CLI docs via MCP instead of relying on training data |
-| **claude-code-setup** | official | Recommends hooks, agents, and skills to improve a project's Claude Code setup |
 | **claude-md-management** | official | Audits and improves `CLAUDE.md` files |
 | **plugin-dev** | official | Build and validate Claude Code plugins, agents, skills, and hooks |
 | **skill-creator** | official | Create and optimize skills |
-| **commit-commands** | official | `/commit`, `/commit-push-pr`, and `/clean_gone` git helpers |
 
 *"official"* = the built-in `claude-plugins-official` marketplace.
+
+### User scope (for applying the rules anywhere)
+
+If you just want to *practice* the Moster Rules in your own projects rather than work on this repo, install these at the user level (`/plugin`, install for your user) so they follow you into every project. Most are on the built-in `claude-plugins-official` marketplace; **ponytail** ships from a custom one you add first.
+
+| Plugin | Marketplace | What it gives you |
+|--------|-------------|-------------------|
+| **superpowers** | official | Process skills that structure agentic work the way the rules ask for — brainstorming, systematic debugging, test-driven development, and writing/executing plans before touching code |
+| **context7** | official | Fetches up-to-date library/framework/CLI docs via MCP instead of relying on training data |
+| **ponytail** | [`DietrichGebert/ponytail`](https://github.com/DietrichGebert/ponytail) | "Lazy senior dev" mode — pushes the simplest solution that works and guards against over-engineering |
+| **claude-code-setup** | official | Recommends hooks, agents, and skills to improve your Claude Code setup |
+| **commit-commands** | official | `/commit`, `/commit-push-pr`, and `/clean_gone` git helpers |
 
 ## Claude Code configuration
 
