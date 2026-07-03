@@ -1,6 +1,6 @@
 # mosterrules
 
-Python project managed with [uv](https://docs.astral.sh/uv/). Entry point is `main.py`.
+The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md`](rules/README.md) for the index and per-rule format before adding or editing a rule. The rest is a Python scaffold managed with [uv](https://docs.astral.sh/uv/); entry point is `main.py`.
 
 ## Environment
 - Python **3.14.3** (pinned in `.python-version`)
