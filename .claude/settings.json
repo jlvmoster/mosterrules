@@ -32,7 +32,8 @@
     "skill-creator@claude-plugins-official": true,
     "astral@astral-sh": true,
     "commit-commands@claude-plugins-official": true,
-    "ponytail@ponytail": true
+    "ponytail@ponytail": true,
+    "context7@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "astral-sh": {
