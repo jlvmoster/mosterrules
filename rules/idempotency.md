@@ -36,6 +36,21 @@ into a second side effect: a duplicate charge, a doubled message, a corrupted co
 
 ## How to apply
 
+A request lands, its response is lost, and the agent retries — an idempotency key makes the second attempt a no-op that returns the original result rather than a second side effect:
+
+```mermaid
+sequenceDiagram
+    participant A as Agent
+    participant S as Server
+    A->>S: create user X (key: abc)
+    S->>S: insert; commit
+    S--xA: response lost (timeout)
+    Note over A: never happened — or lost?
+    A->>S: retry: create user X (key: abc)
+    S->>S: key abc already seen → no-op
+    S->>A: 200 OK (original result)
+```
+
 - **Converge to a state; don't blindly apply a delta.** Prefer `set quantity = 5` over `add 1`, upsert
   over insert. Where you must accumulate, recompute from an append-only ledger of keyed entries so a replay is a no-op.
 - **Use idempotency keys for unavoidable side effects.** When the action really creates something
@@ -47,9 +62,31 @@ into a second side effect: a duplicate charge, a doubled message, a corrupted co
   a partial run leaves no half-applied state, and checkpoint long work so it resumes instead of restarting.
 - **Make retry the safe default.** A tool should be retryable without the caller remembering whether it
   already ran — the safety lives in the operation, not the caller's memory.
-- **Guard the genuinely non-idempotent core.** Where an operation truly can't be made idempotent, name
-  it and put [anti-foot-gun](anti-foot-gun.md) guardrails on it (explicit opt-in, confirmation) so a
-  reflexive retry can't reach it.
+
+| Non-idempotent | Idempotent |
+|---|---|
+| `INSERT` | `UPSERT` / insert-then-confirm-on-conflict |
+| `add 1` to a counter | `set quantity = 5` (converge to target) |
+| accumulate in place | replay an append-only keyed ledger |
+| send email / charge card | same action gated by a caller idempotency key |
+
+## Trade-offs
+
+Idempotency isn't free — keys, dedup storage, and recompute-from-a-ledger all cost something, and for
+a cheap, already-safe repeat they can be overkill. And some operations genuinely can't be made
+idempotent. Where one truly can't, name it and put [anti-foot-gun](anti-foot-gun.md) guardrails on it
+(explicit opt-in, confirmation) so a reflexive retry can't reach it — the guardrail substitutes for the
+property you can't get.
+
+## Litmus test
+
+> Kill the process mid-run and run it again — is the end state indistinguishable from running it
+> exactly once?
+
+## Related
+
+- [Anti-Foot-Gun](anti-foot-gun.md) — guardrails on the non-idempotent core when convergence isn't possible.
+- [Least Privilege](least-privilege.md) — cap the blast radius of a retry that does fire, not just whether it's safe.
 
 ## References
 

@@ -6,6 +6,12 @@
 
 The *principle of least privilege* (PoLP) holds that every actor — a user, a service, a credential, a tool, an agent — should operate with the **least authority required to do its job**, and no more. Privilege is scoped along three axes: **what** it can touch (which resources), **how** it can touch them (read vs. write vs. delete), and **how long** it holds the grant (permanent vs. time-bound).
 
+| Axis | Over-broad | Least privilege |
+|---|---|---|
+| **What** — resources | whole account, all tables | one bucket, one table, one repo |
+| **How** — actions | admin / read-write-delete | read-only when only reading |
+| **How long** — time | long-lived static secret | short-lived, auto-expiring, revocable |
+
 The default is **deny**. Access is an allowlist you widen on demonstrated need, not a denylist you trim after an incident. A broad grant "to be safe" or "so it just works" inverts the principle — it optimizes for never being blocked instead of for limiting what a mistake or a compromise can reach.
 
 The payoff is **blast radius**. When something goes wrong — a bug, a leaked token, a hijacked prompt — the damage is bounded by what that actor was allowed to do. Least privilege is what makes "went wrong" mean "small," not "catastrophic."
@@ -28,7 +34,19 @@ Agents are handed authority — API tokens, database credentials, tool access, s
 - **Separate identities and segment.** Distinct principals for distinct jobs, so one compromise doesn't inherit the others' access; segment resources so reaching one grants no path to the rest.
 - **Drop privilege as soon as it's spent.** Don't run as root when a normal user works; don't hold write access during a read-only phase. Acquire narrowly, use, release.
 - **Review and revoke.** Grants accrete; audit them and remove what's unused — an access nobody exercises is all blast radius, no benefit.
-- **Calibrate, or least privilege becomes theater.** Scope so tight the safe path is constantly blocked and callers reach for the broad admin credential "just to unblock" — the same way an over-noisy guardrail trains a reflexive `--force` ([anti-foot-gun](anti-foot-gun.md)). Grant enough to do the real job in one deliberate step, not so little the workaround is a wildcard.
+
+## Trade-offs
+
+Scope so tight that the safe path is constantly blocked and callers — agents especially — reach for the broad admin credential "just to unblock," the same way an over-noisy guardrail trains a reflexive `--force` ([anti-foot-gun](anti-foot-gun.md)). Over-segmentation cuts the other way: many narrow identities mean credential sprawl and rotation overhead. Grant enough to do the real job in one deliberate step — not so little the workaround is a wildcard.
+
+## Litmus test
+
+> If this credential leaked right now, what's the worst an attacker could reach — and is every grant it carries something the actor actually exercises?
+
+## Related
+
+- [Anti-Foot-Gun](anti-foot-gun.md) — narrow, purpose-built tools over broad ones, applied to *authority*.
+- [Idempotency](idempotency.md) — both bound the damage an agent can do acting fast and at volume.
 
 ## References
 
