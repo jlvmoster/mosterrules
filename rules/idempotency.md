@@ -65,7 +65,7 @@ sequenceDiagram
 
 | Non-idempotent | Idempotent |
 |---|---|
-| `INSERT` | `UPSERT` / insert-then-confirm-on-conflict |
+| `INSERT` | `UPSERT` to a target value (not `+= 1`) / insert-then-confirm-on-conflict |
 | `add 1` to a counter | `set quantity = 5` (converge to target) |
 | accumulate in place | replay an append-only keyed ledger |
 | send email / charge card | same action gated by a caller idempotency key |

@@ -14,7 +14,7 @@ The **Moster Rules** — principles for *Agentic Software Development* (building
 
 ## The Moster Rules
 
-See [`rules/README.md`](rules/README.md) for the full index. Each rule is a one-line statement, the principle, why it matters for agentic work, how to apply it, and references.
+See [`rules/README.md`](rules/README.md) for the full index. Each rule is a one-line statement, the principle, why it matters for agentic work, how to apply it, its trade-offs, a litmus test, related rules, and references.
 
 ## Getting started
 
