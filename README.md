@@ -71,6 +71,6 @@ If you just want to *practice* the Moster Rules in your own projects rather than
 
 The [`.claude/settings.json`](.claude/settings.json) in this repo puts the Moster Rules into practice:
 
-- **Auto-checks on edit** — a `PostToolUse` hook runs `ruff check --fix`, `ruff format`, and `ty check` after every file edit, so lint/format/type gates enforce themselves rather than living in a docstring.
-- **Protected lockfile** — direct `Edit`/`Write` to `uv.lock` is denied; changes go through `uv` (which owns it).
+- **Auto-checks on edit** — a `PostToolUse` hook runs `ruff check --fix`, `ruff format`, and `ty check` after Claude's `Edit`/`Write` tools (edits made via Bash don't trigger it), so lint/format/type gates enforce themselves rather than living in a docstring.
+- **Protected lockfile** — Claude's file tools can't edit `uv.lock` directly; changes go through `uv` (which owns it).
 - **Pre-allowed commands** — the `uv sync` / `uv run main.py` / `uv run ruff` / `uv run ty` commands run without a permission prompt.

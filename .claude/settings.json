@@ -8,14 +8,13 @@
       "Bash(uv run ty:*)"
     ],
     "deny": [
-      "Edit(uv.lock)",
-      "Write(uv.lock)"
+      "Edit(uv.lock)"
     ]
   },
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
