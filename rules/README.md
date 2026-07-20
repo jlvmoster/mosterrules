@@ -2,7 +2,7 @@
 
 Principles for **Agentic Software Development** — building software *with* AI agents and *for* a world where agents read, write, and run your code.
 
-Each rule lives in its own kebab-case file and follows the same shape: an opening one-sentence `>` blockquote, the principle, why it matters for agentic work, how to apply it, and references. This file is the index — when you add a rule, add a row below and copy the rule's blockquote verbatim into its Principle cell.
+Each rule lives in its own kebab-case file and follows the same shape: an opening one-sentence `>` blockquote, the principle, why it matters for agentic work, how to apply it, its trade-offs, a litmus test, related rules, and references. This file is the index — when you add a rule, add a row below and copy the rule's blockquote verbatim into its Principle cell.
 
 ## Rules
 

@@ -17,16 +17,36 @@ Agents amplify footguns. They act fast, in volume, and without the situational c
 - **Silent failure compounds.** An agent that gets a quietly-wrong result keeps building on it. A loud failure stops the chain; a silent one ships.
 - **The interface is the contract.** Whatever a tool, function, or command *allows*, an agent will eventually *do*. Narrow the interface and the wrong action becomes unrepresentable.
 
-So in agentic work, "make it hard to misuse" is not politeness — it's the primary safety mechanism, because the actor on the other end will take any path you leave open.
-
 ## How to apply
 
-- **Safe defaults.** The default behavior is the correct, conservative one; the dangerous behavior requires an explicit, deliberate flag (`--force`, `--no-verify`, `allow_destructive=True`). A mutable default argument (`def f(x=[])`) is the failure in miniature — the unsafe form is the path of least resistance; `def f(x=None)` then `if x is None: x = []` makes the safe form the default, and lint (`B006`) catches the other.
+- **Safe defaults.** The default behavior is the correct, conservative one; the dangerous behavior requires an explicit, deliberate flag (`--force`, `--no-verify`, `allow_destructive=True`). A mutable default argument (`def f(x=[])`) is the failure in miniature — the unsafe form is the path of least resistance; `def f(x=None)` then `if x is None: x = []` makes the safe form the default, and a linter flags the unsafe one (Ruff's `B006`, for instance).
 - **Make misuse a hard error.** Push violations as early as possible: a type error, a lint rule, a failing CI gate, a schema rejection. Earlier and louder beats later and quieter.
-- **Constrain the interface.** Give agents and callers narrow, purpose-built tools instead of broad, powerful ones. A `delete_draft(id)` is safer than handing over raw SQL, and denying direct edits to a generated artifact (a lockfile, a build output) steers changes through the tool that owns it. Make illegal states unrepresentable — but scope it to invariants that genuinely never change; pushed too far, it trades real flexibility for type-gymnastics around constraints the domain doesn't actually hold.
+- **Constrain the interface.** Give agents and callers narrow, purpose-built tools instead of broad, powerful ones. A `delete_draft(id)` is safer than handing over raw SQL, and denying direct edits to a generated artifact (a lockfile, a build output) steers changes through the tool that owns it. Make illegal states unrepresentable — but only for invariants that genuinely never change, or it trades real flexibility for type-gymnastics.
 - **Require explicit opt-in for irreversible actions.** Deleting, overwriting, publishing, or sending to the outside world should demand confirmation or a distinct, intentional call — never a default or a side effect.
-- **Fail loud, not silently wrong.** The dangerous case is the *quietly wrong* result — return an error, not a plausible-looking empty value, so a bad value can't propagate down the chain. This is not a blanket ban on recovery: graceful degradation, retries, and fallbacks are correct for non-critical paths. The rule is that degradation must be *visible*, never a silently-swapped wrong answer. Fail-fast vs. degrade-gracefully is a per-component call based on criticality.
-- **Calibrate, or the guardrail becomes the footgun.** Every gate has a false-positive cost. If the safe path is too noisy or the override too routine, callers — agents especially — learn to reflexively reach for `--force` / `--no-verify`, and the footgun just moves to the override. "Whatever a tool allows, an agent will do" cuts both ways: the escape hatch is part of the interface too, so keep it deliberate — narrow an override or suppression to the specific case (a suppression scoped to a single rule, not a wholesale silencing) so each use is intentional and auditable. A guardrail that's always bypassed is documentation with extra steps.
+- **Fail loud, not silently wrong.** The dangerous case is the *quietly wrong* result — return an error, not a plausible-looking empty value, so a bad value can't propagate down the chain.
+
+| Footgun (easy, unsafe) | Why it bites an agent | Structural fix (safe by default) |
+|---|---|---|
+| `def f(x=[])` mutable default | shared state mutates across calls, silently | `def f(x=None)` + `if x is None: x = []`; Ruff `B006` flags it |
+| "remember to close it" in a docstring | prose is out-of-context mid-task | scope-bound resource: context manager / `defer` / RAII |
+| raw SQL / admin connection handed over | whatever the interface allows, an agent will do | narrow tool: `delete_draft(id)`, not arbitrary SQL |
+| returns `[]` / `None` on a bad lookup | a quietly-wrong value propagates down the chain | raise or return an error — fail loud |
+| destructive action as default or side effect | a reflexive call deletes or publishes | explicit opt-in: `--force`, `allow_destructive=True` |
+
+## Trade-offs
+
+Every guardrail has a false-positive cost. If the safe path is too noisy or the override too routine, callers — agents especially — reflexively reach for `--force` / `--no-verify`, and the footgun just moves to the override. Keep the escape hatch deliberate: scope a suppression to the single rule, not a wholesale silencing — a guardrail that's always bypassed is documentation with extra steps.
+
+Failing loud is itself a per-component call: critical paths should fail fast, but graceful degradation, retries, and fallbacks are correct on non-critical ones — as long as the degradation stays *visible*, never a silently-swapped wrong answer.
+
+## Litmus test
+
+> If an agent ran this on autopilot, what's the worst it could do *by default* — and does the dangerous path demand a deliberate, explicit step (a flag, a distinct call, a confirmation)?
+
+## Related
+
+- [Idempotency](idempotency.md) — put guardrails on the genuinely non-idempotent core so a reflexive retry can't reach it.
+- [Least Privilege](least-privilege.md) — the same interface-narrowing move, applied to *authority* rather than *shape*.
 
 ## References
 

@@ -5,21 +5,31 @@
       "Bash(uv sync:*)",
       "Bash(uv run main.py:*)",
       "Bash(uv run ruff:*)",
-      "Bash(uv run ty:*)"
+      "Bash(uv run ty:*)",
+      "Bash(uv run python .claude/hooks/validate_rules.py:*)"
     ],
     "deny": [
-      "Edit(uv.lock)",
-      "Write(uv.lock)"
+      "Edit(uv.lock)"
     ]
   },
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
             "command": "uv run ruff check --fix . && uv run ruff format . && uv run ty check"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/validate_rules.py\""
           }
         ]
       }

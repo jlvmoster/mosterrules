@@ -22,3 +22,9 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 
 ## Testing
 - No test suite or test runner is configured yet. There is no `uv run pytest` workflow until one is added.
+
+## Automated checks (`.claude/` hooks)
+These run automatically — they're not optional style notes:
+- **On edit** (PostToolUse): `ruff check --fix`, `ruff format`, `ty check` run after every `Edit`/`Write` (not Bash edits), so files may be reformatted right after you write them.
+- **On stop** (Stop): `.claude/hooks/validate_rules.py` runs and **blocks the turn from ending** if any `rules/*.md` drifts from the canonical 8-part shape, or `rules/README.md` stops mirroring a rule's blockquote verbatim, or a `## Related` link points to a missing rule. Run it directly to check; `--selftest` exercises the parser.
+- **Editing a hook?** Anchor paths to the repo root (`Path(__file__).resolve().parents[2]`, and `${CLAUDE_PROJECT_DIR}` in the command) — a hook's cwd is *not* guaranteed to be the project root, and a cwd-relative path that fails will exit non-zero and block Stop.
