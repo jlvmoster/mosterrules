@@ -12,6 +12,7 @@ Run with --selftest to exercise the pure helpers on synthetic input.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -71,9 +72,22 @@ def is_tracked(path: str) -> bool:
 
 
 def untracked_rules() -> set[str]:
-    """Names of untracked rules/*.md — the fallback when no path is in the payload."""
+    """Names of untracked rules/*.md — the fallback when no path is in the payload.
+
+    --untracked-files=all overrides a repo/user status.showUntrackedFiles=no, which
+    would otherwise hide brand-new rules from --porcelain and blind the guard.
+    """
     result = subprocess.run(
-        ["git", "-C", str(ROOT), "status", "--porcelain", "--", "rules"],
+        [
+            "git",
+            "-C",
+            str(ROOT),
+            "status",
+            "--porcelain",
+            "--untracked-files=all",
+            "--",
+            "rules",
+        ],
         capture_output=True,
         text=True,
     )
@@ -85,14 +99,41 @@ def untracked_rules() -> set[str]:
     return names
 
 
+# Codex's apply_patch delivers the raw patch as tool_input.command (no file_path);
+# it introduces new files with "*** Add File: <path>" markers we can read directly.
+ADD_FILE_RE = re.compile(r"^\*\*\* Add File: (.+)$", re.MULTILINE)
+
+
+def patch_text(payload: dict) -> str:
+    """The apply_patch body carried on tool_input.command, or '' if absent."""
+    tool_input = payload.get("tool_input")
+    if isinstance(tool_input, dict) and isinstance(tool_input.get("command"), str):
+        return tool_input["command"]
+    return ""
+
+
+def added_rules(patch: str) -> set[str]:
+    """Rule filenames the patch *creates* via '*** Add File:' — scoped to this edit."""
+    return {
+        Path(m.strip()).name for m in ADD_FILE_RE.findall(patch) if is_rule(m.strip())
+    }
+
+
 def new_rule_names(payload: dict) -> set[str]:
     """Names of brand-new rule files this tool call is creating (empty if none)."""
     path = written_path(payload)
     if path is not None:
+        # Claude Edit/Write: one concrete path — new only if it's an untracked rule.
         if is_rule(path) and not is_tracked(path):
             return {Path(path).name}
         return set()  # a non-rule write, or an edit to an existing rule
-    return untracked_rules()  # payload carried no path — scan git instead
+    patch = patch_text(payload)
+    if patch:
+        # Codex apply_patch: the patch names exactly what it adds, so an update-only
+        # patch (README, reciprocal links, an existing rule) correctly yields nothing
+        # — no re-nagging on every later edit while a new rule sits uncommitted.
+        return added_rules(patch)
+    return untracked_rules()  # no path and no patch — last-resort scan for untracked
 
 
 def render(entries: list[tuple[str, str]]) -> str:

@@ -11,7 +11,6 @@ Run with --selftest to exercise the parser on synthetic input.
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 from pathlib import Path
@@ -154,22 +153,17 @@ def main() -> int:
     if "--selftest" in sys.argv:
         selftest()
         return 0
-    # Stop hooks get JSON on stdin; stop_hook_active is true when we're already
-    # inside a hook-driven continuation. Block once to force a fix, but don't
-    # re-block after that — re-blocking an unfixable error is an infinite Stop loop.
-    stop_hook_active = False
-    if not sys.stdin.isatty():
-        try:
-            payload = json.load(sys.stdin)
-            stop_hook_active = bool(payload.get("stop_hook_active"))
-        except ValueError, AttributeError:
-            pass  # run standalone (no JSON piped in) — validate and block normally
+    # Always block on drift. A second Stop hook (curate_rules.py) also runs, and
+    # stop_hook_active is turn-wide, not per-hook: if that hook blocks first, honoring
+    # the flag here would skip validation on the continuation and let an invalid rule
+    # through. Structural errors are deterministic and agent-fixable, so re-blocking
+    # until fixed is safe — it won't loop in practice.
     errors = validate()
     if errors:
         print("Moster Rules validation failed:", file=sys.stderr)
         for err in errors:
             print(f"  - {err}", file=sys.stderr)
-        return 0 if stop_hook_active else 2
+        return 2
     return 0
 
 

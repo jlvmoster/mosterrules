@@ -127,6 +127,41 @@ class UntrackedRulesTests(unittest.TestCase):
         stdout = "?? rules/README.md\n?? rules/notes.txt\n?? rules/real.md\n"
         self.assertEqual(self._names(stdout), {"real.md"})
 
+    def test_passes_untracked_files_all_flag(self) -> None:
+        # Otherwise status.showUntrackedFiles=no would hide new rules (P2 regression).
+        with mock.patch.object(
+            guard.subprocess, "run", return_value=_completed(0, "")
+        ) as run:
+            guard.untracked_rules()
+        self.assertIn("--untracked-files=all", run.call_args.args[0])
+
+
+class PatchParsingTests(unittest.TestCase):
+    """Codex apply_patch carries the patch on tool_input.command, not file_path."""
+
+    def test_patch_text_reads_command(self) -> None:
+        self.assertEqual(
+            guard.patch_text({"tool_input": {"command": "PATCH"}}), "PATCH"
+        )
+
+    def test_patch_text_empty_without_command(self) -> None:
+        self.assertEqual(guard.patch_text({"tool_input": {"file_path": "x"}}), "")
+        self.assertEqual(guard.patch_text({}), "")
+
+    def test_added_rules_finds_add_file_markers(self) -> None:
+        patch = (
+            "*** Begin Patch\n*** Add File: rules/new-thing.md\n+# New\n*** End Patch\n"
+        )
+        self.assertEqual(guard.added_rules(patch), {"new-thing.md"})
+
+    def test_added_rules_ignores_updates_and_non_rules(self) -> None:
+        patch = (
+            "*** Update File: rules/existing.md\n"
+            "*** Add File: rules/README.md\n"
+            "*** Add File: main.py\n"
+        )
+        self.assertEqual(guard.added_rules(patch), set())
+
 
 class NewRuleNamesTests(unittest.TestCase):
     def test_new_untracked_rule_from_payload(self) -> None:
@@ -147,6 +182,21 @@ class NewRuleNamesTests(unittest.TestCase):
     def test_no_path_falls_back_to_git_scan(self) -> None:
         with mock.patch.object(guard, "untracked_rules", return_value={"scanned.md"}):
             self.assertEqual(guard.new_rule_names({}), {"scanned.md"})
+
+    def test_codex_apply_patch_adding_a_rule(self) -> None:
+        patch = "*** Begin Patch\n*** Add File: rules/new.md\n+# New\n*** End Patch\n"
+        self.assertEqual(
+            guard.new_rule_names({"tool_input": {"command": patch}}), {"new.md"}
+        )
+
+    def test_codex_update_only_patch_does_not_renag(self) -> None:
+        # An update-only patch yields nothing and must NOT fall through to the git
+        # scan (which would fire on every later edit while a new rule is uncommitted).
+        patch = "*** Begin Patch\n*** Update File: rules/existing.md\n*** End Patch\n"
+        with mock.patch.object(guard, "untracked_rules", side_effect=AssertionError):
+            self.assertEqual(
+                guard.new_rule_names({"tool_input": {"command": patch}}), set()
+            )
 
 
 class EntriesForTests(unittest.TestCase):

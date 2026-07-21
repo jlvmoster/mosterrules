@@ -19,10 +19,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 MESSAGE = (
-    "Moster Rules changed this turn. Before finishing, dispatch the `rule-curator` "
-    "subagent (Claude: the Task tool → rule-curator; Codex: `$rule-curator`) for a "
-    "corpus-level pass — reciprocal Related links, emergent overlap, house-voice drift, "
-    "and continuous-improvement suggestions — then apply any fixes it proposes.\n"
+    "Moster Rules changed this turn. Before finishing, delegate a corpus-level review to "
+    "the `rule-curator` subagent (Claude: the Task tool → rule-curator; Codex: spawn the "
+    "rule-curator subagent, the custom agent defined in .codex/agents/rule-curator.toml) "
+    "— reciprocal Related links, emergent overlap, house-voice drift, and "
+    "continuous-improvement suggestions — then apply any fixes it proposes.\n"
     "This reminder won't repeat this turn."
 )
 
