@@ -1,0 +1,4 @@
+policy:
+  # User-invoked only (mirrors the Claude skill's disable-model-invocation): the
+  # skill writes files, so Codex must not trigger it implicitly. Run it with $new-rule.
+  allow_implicit_invocation: false

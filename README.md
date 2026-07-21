@@ -7,8 +7,10 @@ The **Moster Rules** — principles for *Agentic Software Engineering* (building
 | Path | What it is |
 |------|------------|
 | [`rules/`](rules/) | The Moster Rules — one principle per file |
-| [`CLAUDE.md`](CLAUDE.md) | Project instructions Claude Code loads automatically |
-| [`.claude/`](.claude/) | Settings: permissions, hooks, and recommended plugins |
+| [`AGENTS.md`](AGENTS.md) | Project instructions Claude Code and Codex load automatically |
+| [`CLAUDE.md`](CLAUDE.md) | Thin pointer to `AGENTS.md` (what Claude Code loads) |
+| [`.claude/`](.claude/) | Claude Code settings: permissions, hooks, agent, and recommended plugins |
+| [`.codex/`](.codex/) | Codex hooks, agent, and skill — mirrors `.claude/` |
 | `main.py` | Entry point |
 | `pyproject.toml` / `uv.lock` | Dependencies and pinned lockfile (managed by `uv`) |
 
