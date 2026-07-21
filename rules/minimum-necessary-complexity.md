@@ -39,6 +39,7 @@ Minimalism has a failure mode of its own: too little structure is also complexit
 
 - [Least Privilege](least-privilege.md) — both are "no more than needed": Least Privilege bounds the *authority* granted, this bounds the *machinery built*. Excess of either is standing risk with no benefit.
 - [Anti-Foot-Gun](anti-foot-gun.md) — less surface is fewer footguns; a smaller interface has fewer ways to be misused, so simplicity and safety pull the same direction.
+- [Test-Driven Development](test-driven-development.md) — TDD is this rule's engine: the simplest-code-to-pass step and "the next test earns the next code" enforce YAGNI move by move, so nothing gets built that no test demands.
 
 ## References
 

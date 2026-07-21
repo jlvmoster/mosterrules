@@ -41,6 +41,7 @@ Verification costs time and machinery, and not every step earns a full harness �
 - [Determinism](determinism.md) — an exact-match check needs a result that doesn't change run to run; where it legitimately varies, verify by invariant, range, or property instead. Reproducible-but-wrong is still wrong — Determinism gives repeatability, Verifiability gives correctness.
 - [Leave a Trace](leave-a-trace.md) — Verifiability proves success *now*, in the loop; Leave a Trace is the durable record that lets you reconstruct it *later*.
 - [Single Source of Truth](single-source-of-truth.md) — SSOT makes a fact *authoritative*; Verifiability checks it's actually *correct* — one authoritative home can still hold a wrong value.
+- [Test-Driven Development](test-driven-development.md) — its most direct specialization: Verifiability is the *what* (define success, check it with independent evidence); TDD is one disciplined *when* — write the check first and watch it fail before the code exists. You can verify without testing first; you can't do TDD without verifying.
 
 ## References
 

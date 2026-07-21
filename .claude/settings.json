@@ -7,7 +7,9 @@
       "Bash(uv run ruff:*)",
       "Bash(uv run ty:*)",
       "Bash(uv run python -m unittest:*)",
-      "Bash(uv run python .claude/hooks/validate_rules.py:*)"
+      "Bash(uv run python .claude/hooks/validate_rules.py:*)",
+      "Bash(uv run python .claude/hooks/guard_new_rule.py:*)",
+      "Bash(uv run python .claude/hooks/curate_rules.py:*)"
     ],
     "deny": [
       "Edit(uv.lock)"
@@ -23,6 +25,15 @@
             "command": "uv run ruff check --fix . && uv run ruff format . && uv run ty check"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_new_rule.py\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -31,6 +42,14 @@
           {
             "type": "command",
             "command": "uv run python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/validate_rules.py\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/curate_rules.py\""
           }
         ]
       }

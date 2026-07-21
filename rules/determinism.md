@@ -48,6 +48,7 @@ Full determinism isn't always reachable or worth it. Wall-clock time, real rando
 - [Idempotency](idempotency.md) — the sibling, on a different axis. Idempotency makes a repeated *side effect* harmless (a retried charge doesn't double); Determinism makes the same inputs produce the same *output*. One is about safe repetition of an effect, the other about reproducibility of a result — you can want either without the other.
 - [Verifiability](verifiability.md) — an *exact-match* check needs a stable result, and Determinism is what gives it a fixed target; where output is legitimately variable, Verifiability falls back to checking invariants and properties instead.
 - [Leave a Trace](leave-a-trace.md) — both record for later, to different ends: Determinism records inputs to *reproduce a result*; Leave a Trace records events to *reconstruct what happened*. Replay versus audit.
+- [Test-Driven Development](test-driven-development.md) — red-green only carries information if the target holds still: a flaky test has no fixed red or green to drive from, so test-first quietly depends on a deterministic result to check against.
 
 ## References
 
