@@ -1,6 +1,6 @@
 # mosterrules
 
-The **Moster Rules** — principles for *Agentic Software Development* (building software *with* AI agents and *for* a world where agents read, write, and run your code), plus a minimal [`uv`](https://docs.astral.sh/uv/)-managed Python scaffold wired for [Claude Code](https://claude.com/claude-code).
+The **Moster Rules** — principles for *Agentic Software Engineering* (building software *with* AI agents and *for* a world where agents read, write, and run your code), plus a minimal [`uv`](https://docs.astral.sh/uv/)-managed Python scaffold wired for [Claude Code](https://claude.com/claude-code).
 
 ## What's here
 
