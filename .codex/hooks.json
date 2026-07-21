@@ -9,6 +9,15 @@
             "command": "cd \"$(git rev-parse --show-toplevel)\" && uv run ruff check --fix . && uv run ruff format . && uv run ty check"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python \"$(git rev-parse --show-toplevel)/.claude/hooks/guard_new_rule.py\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -17,6 +26,14 @@
           {
             "type": "command",
             "command": "uv run python \"$(git rev-parse --show-toplevel)/.claude/hooks/validate_rules.py\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run python \"$(git rev-parse --show-toplevel)/.claude/hooks/curate_rules.py\""
           }
         ]
       }
