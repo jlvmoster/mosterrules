@@ -47,6 +47,9 @@ Failing loud is itself a per-component call: critical paths should fail fast, bu
 
 - [Idempotency](idempotency.md) — put guardrails on the genuinely non-idempotent core so a reflexive retry can't reach it.
 - [Least Privilege](least-privilege.md) — the same interface-narrowing move, applied to *authority* rather than *shape*.
+- [Distrust Input](distrust-input.md) — this narrows the interface's *shape*; Distrust Input validates the *values* that flow through it, and shares the fail-loud reflex.
+- [Verifiability](verifiability.md) — fail-loud stops a quietly-wrong value from propagating; Verifiability is the up-front, closed-loop check that the value is right.
+- [Single Source of Truth](single-source-of-truth.md) — routing edits of a generated artifact through the tool that owns it is that rule made structural: the derived copy can't be hand-edited, so it can't drift from its source.
 
 ## References
 

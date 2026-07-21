@@ -87,6 +87,8 @@ property you can't get.
 
 - [Anti-Foot-Gun](anti-foot-gun.md) — guardrails on the non-idempotent core when convergence isn't possible.
 - [Least Privilege](least-privilege.md) — cap the blast radius of a retry that does fire, not just whether it's safe.
+- [Determinism](determinism.md) — the sibling on a different axis: safe *repetition of a side effect* here, reproducibility of a *result* there.
+- [Single Source of Truth](single-source-of-truth.md) — Idempotency leans on durable state as the truth so one operation converges; SSOT applies that instinct to every *fact*, not one operation.
 
 ## References
 
