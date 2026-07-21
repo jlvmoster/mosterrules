@@ -16,4 +16,5 @@ Each rule lives in its own kebab-case file and follows the same shape: an openin
 | [Least Privilege](least-privilege.md) | Grant the minimum access needed, for the minimum scope, for the minimum time — and no more. Default to deny; widen only on demonstrated need. |
 | [Minimum Necessary Complexity](minimum-necessary-complexity.md) | Build the smallest thing that meets a demonstrated need; add machinery only when reality earns it. |
 | [Single Source of Truth](single-source-of-truth.md) | Give each fact one authoritative home; derive, link, or validate every other representation. |
+| [Test-Driven Development](test-driven-development.md) | Write the failing test first, watch it fail, then write the code that makes it pass. The test is the specification; the code is what satisfies it. |
 | [Verifiability](verifiability.md) | Define success before acting, then verify the result with independent, observable evidence — not the agent's own assertion. |
