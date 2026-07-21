@@ -47,6 +47,9 @@ Scope so tight that the safe path is constantly blocked and callers — agents e
 
 - [Anti-Foot-Gun](anti-foot-gun.md) — narrow, purpose-built tools over broad ones, applied to *authority*.
 - [Idempotency](idempotency.md) — both bound the damage an agent can do acting fast and at volume.
+- [Distrust Input](distrust-input.md) — the security partner: this bounds what a hijacked agent can *do*, Distrust Input governs what gets *in* to hijack it.
+- [Leave a Trace](leave-a-trace.md) — Least Privilege *limits* harm; Leave a Trace *detects and reconstructs* it — the two halves of bounding blast radius.
+- [Minimum Necessary Complexity](minimum-necessary-complexity.md) — both are "no more than needed": Least Privilege bounds the *authority* granted, MNC bounds the *machinery built*. Excess of either is standing risk with no benefit.
 
 ## References
 
