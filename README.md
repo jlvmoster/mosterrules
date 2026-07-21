@@ -36,6 +36,7 @@ uv run main.py     # run the app
 | Lint | `uv run ruff check .` |
 | Format | `uv run ruff format .` |
 | Type check | `uv run ty check` |
+| Run tests | `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'` |
 | Add a dependency | `uv add <package>` |
 | Add a dev dependency | `uv add --dev <package>` |
 
