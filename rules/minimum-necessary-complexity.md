@@ -46,3 +46,4 @@ Minimalism has a failure mode of its own: too little structure is also complexit
 - [John Ousterhout — A Philosophy of Software Design](https://web.stanford.edu/~ouster/cgi-bin/book.php) — complexity as the thing good design fights
 - [Gall's Law](https://en.wikipedia.org/wiki/John_Gall_(author)#Gall's_law) — a working complex system evolves from a working simple one
 - [YAGNI — You Aren't Gonna Need It](https://martinfowler.com/bliki/Yagni.html)
+- [Ponytail](https://github.com/DietrichGebert/ponytail) — a "lazy senior dev" Claude Code plugin that operationalizes this principle as a review/guardrail against over-engineering
