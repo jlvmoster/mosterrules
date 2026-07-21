@@ -43,7 +43,7 @@ sequenceDiagram
     participant A as Agent
     participant S as Server
     A->>S: create user X (key: abc)
-    S->>S: insert; commit
+    S->>S: insert then commit
     S--xA: response lost (timeout)
     Note over A: never happened — or lost?
     A->>S: retry: create user X (key: abc)
