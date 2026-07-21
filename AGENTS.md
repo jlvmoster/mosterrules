@@ -12,6 +12,7 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 - Lint: `uv run ruff check .`
 - Format: `uv run ruff format .`
 - Type check: `uv run ty check`
+- Run tests: `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'`
 - Add a dependency: `uv add <package>`
 - Add a dev dependency: `uv add --dev <package>`
 
@@ -21,7 +22,8 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 - Type checking uses [ty](https://docs.astral.sh/ty/) (not mypy/pyright). The `astral` plugin wires ty as the editor language server; `uv run ty check` is the CLI gate. Fix type errors rather than suppressing them; if you must suppress, use a rule-specific `# ty: ignore[rule]`.
 
 ## Testing
-- No test suite or test runner is configured yet. There is no `uv run pytest` workflow until one is added.
+- The `validate_rules.py` hook has a stdlib `unittest` suite in `.claude/hooks/test_validate_rules.py`: `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'`. It is not wired into a hook or CI gate — run it after touching the validator.
+- No `pytest` is configured; there is no `uv run pytest` workflow until one is added.
 
 ## Automated checks (hooks)
 These run automatically in both Claude Code (`.claude/settings.json`) and Codex (`.codex/hooks.json`) — they're not optional style notes. (In Codex, project hooks load only after you trust the workspace and its hook definitions — review them via `/hooks` on first use.)
