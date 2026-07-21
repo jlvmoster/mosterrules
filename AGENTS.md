@@ -22,7 +22,7 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 - Type checking uses [ty](https://docs.astral.sh/ty/) (not mypy/pyright). The `astral` plugin wires ty as the editor language server; `uv run ty check` is the CLI gate. Fix type errors rather than suppressing them; if you must suppress, use a rule-specific `# ty: ignore[rule]`.
 
 ## Testing
-- The `validate_rules.py` hook has a stdlib `unittest` suite in `.claude/hooks/test_validate_rules.py`: `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'`. It is not wired into a hook or CI gate — run it after touching the validator.
+- Each hook script has a stdlib `unittest` suite beside it in `.claude/hooks/test_*.py` (`validate_rules`, `guard_new_rule`, `curate_rules`): `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'`. They aren't wired into a hook or CI gate — run them after touching a hook. Follow [Test-Driven Development](rules/test-driven-development.md): write the failing test first, or when adding tests to existing code, mutate the code to confirm the new test actually goes red.
 - No `pytest` is configured; there is no `uv run pytest` workflow until one is added.
 
 ## Automated checks (hooks)
