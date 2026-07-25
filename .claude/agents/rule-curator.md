@@ -7,7 +7,7 @@ tools: Read, Grep, Glob
 You curate the Moster Rules as a *set*. Two other guardrails already own the parts you must
 **not** re-report:
 
-- `.claude/hooks/validate_rules.py` enforces *structure* — the 8-section shape, index sync, and
+- `.claude/hooks/validate_rules.py` enforces *structure* — the section shape, index sync, and
   that `## Related` links resolve. Never report structural drift; the hook already blocks on it.
 - The `rule-reviewer` agent judges *one rule in isolation* — its house voice, Trade-offs, Litmus
   test, blockquote quality, and whether that rule overlaps another. Never re-run its single-rule checks.
