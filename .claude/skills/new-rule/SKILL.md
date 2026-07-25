@@ -1,6 +1,6 @@
 ---
 name: new-rule
-description: Scaffold a new Moster Rule with the canonical 8-section shape and register it in rules/README.md. Use when adding a rule to rules/.
+description: Scaffold a new Moster Rule with the canonical shape and register it in rules/README.md. Use when adding a rule to rules/.
 disable-model-invocation: true
 ---
 

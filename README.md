@@ -1,6 +1,6 @@
 # mosterrules
 
-The **Moster Rules** — principles for *Agentic Software Engineering* (building software *with* AI agents and *for* a world where agents read, write, and run your code), plus a minimal [`uv`](https://docs.astral.sh/uv/)-managed Python scaffold wired for [Claude Code](https://claude.com/claude-code).
+The **Moster Rules** — principles for *Agentic Software Engineering* (building software *with* AI agents and *for* a world where agents read, write, and run your code), plus the [`uv`](https://docs.astral.sh/uv/)-managed toolchain that enforces them in [Claude Code](https://claude.com/claude-code) and Codex.
 
 ## What's here
 
@@ -9,14 +9,14 @@ The **Moster Rules** — principles for *Agentic Software Engineering* (building
 | [`rules/`](rules/) | The Moster Rules — one principle per file |
 | [`AGENTS.md`](AGENTS.md) | Project instructions Claude Code and Codex load automatically |
 | [`CLAUDE.md`](CLAUDE.md) | Thin pointer to `AGENTS.md` (what Claude Code loads) |
-| [`.claude/`](.claude/) | Claude Code settings: permissions, hooks, agent, and recommended plugins |
-| [`.codex/`](.codex/) | Codex hooks, agent, and skill — mirrors `.claude/` |
-| `main.py` | Entry point |
+| [`.claude/`](.claude/) | Claude Code settings: permissions, hooks, agents, the `new-rule` skill, and recommended plugins |
+| [`.codex/`](.codex/) | Codex hooks, agents, and skill — mirrors `.claude/` |
+| [`.github/`](.github/) | CI workflow and Dependabot config |
 | `pyproject.toml` / `uv.lock` | Dependencies and pinned lockfile (managed by `uv`) |
 
 ## The Moster Rules
 
-See [`rules/README.md`](rules/README.md) for the full index. Each rule is a one-line statement, the principle, why it matters for agentic work, how to apply it, its trade-offs, a litmus test, related rules, and references.
+See [`rules/README.md`](rules/README.md) for the full index and the shape every rule follows.
 
 ## Getting started
 
@@ -24,23 +24,9 @@ See [`rules/README.md`](rules/README.md) for the full index. Each rule is a one-
 
 ```sh
 uv sync            # create the venv and install dependencies
-uv run main.py     # run the app
 ```
 
-**Common commands:**
-
-| Task | Command |
-|------|---------|
-| Sync deps / create venv | `uv sync` |
-| Run the app | `uv run main.py` |
-| Lint | `uv run ruff check .` |
-| Format | `uv run ruff format .` |
-| Type check | `uv run ty check` |
-| Run tests | `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'` |
-| Add a dependency | `uv add <package>` |
-| Add a dev dependency | `uv add --dev <package>` |
-
-Use `uv` for all dependency and environment operations — do not call `pip` directly. Type checking uses [`ty`](https://docs.astral.sh/ty/), not mypy/pyright.
+The full command list and the conventions that go with it live in [AGENTS.md](AGENTS.md#common-commands) — one home, so they can't drift.
 
 ## Recommended Claude Code plugins
 
@@ -75,5 +61,8 @@ If you just want to *practice* the Moster Rules in your own projects rather than
 The [`.claude/settings.json`](.claude/settings.json) in this repo puts the Moster Rules into practice:
 
 - **Auto-checks on edit** — a `PostToolUse` hook runs `ruff check --fix`, `ruff format`, and `ty check` after Claude's `Edit`/`Write` tools (edits made via Bash don't trigger it), so lint/format/type gates enforce themselves rather than living in a docstring.
-- **Protected lockfile** — Claude's file tools can't edit `uv.lock` directly; changes go through `uv` (which owns it).
-- **Pre-allowed commands** — the `uv sync` / `uv run main.py` / `uv run ruff` / `uv run ty` commands run without a permission prompt.
+- **Turn-end validation** — a `Stop` hook validates every rule and the index, and asks for a corpus-level curation pass when `rules/` has uncommitted changes.
+- **Protected lockfile** — Claude's `Edit` and `Write` tools are denied on `uv.lock`; changes go through `uv`, which owns it.
+- **Pre-allowed commands** — the project's `uv` commands run without a permission prompt (see `permissions.allow`).
+
+[AGENTS.md](AGENTS.md#automated-checks-hooks) documents each hook and what blocks on it. The same hooks run under Codex via [`.codex/hooks.json`](.codex/hooks.json), and [CI](.github/workflows/ci.yml) re-runs the checks on every push and PR.

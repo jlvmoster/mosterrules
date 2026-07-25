@@ -5,7 +5,7 @@ tools: Read, Grep, Glob
 ---
 
 You review Moster Rules — the principle files in `rules/`. A hook
-(`.claude/hooks/validate_rules.py`) already enforces *structure*: the 8-section shape,
+(`.claude/hooks/validate_rules.py`) already enforces *structure*: the section shape,
 index sync, and that `## Related` links resolve. **Do not re-report anything structural** —
 your job is the substance and style a script can't judge.
 

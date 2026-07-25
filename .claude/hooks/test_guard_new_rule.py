@@ -184,9 +184,19 @@ class NewRuleNamesTests(unittest.TestCase):
             self.assertEqual(guard.new_rule_names({}), {"scanned.md"})
 
     def test_codex_apply_patch_adding_a_rule(self) -> None:
+        # Freeform apply_patch carries the body on `input` — the shape observed in
+        # every real Codex call. `command` was a guess and never matched.
         patch = "*** Begin Patch\n*** Add File: rules/new.md\n+# New\n*** End Patch\n"
         self.assertEqual(
-            guard.new_rule_names({"tool_input": {"command": patch}}), {"new.md"}
+            guard.new_rule_names({"tool_input": {"input": patch}}), {"new.md"}
+        )
+
+    def test_codex_apply_patch_json_tool_list_form(self) -> None:
+        # The non-freeform tool schema passes ["apply_patch", "<patch>"] on `command`.
+        patch = "*** Begin Patch\n*** Add File: rules/new.md\n+# New\n*** End Patch\n"
+        self.assertEqual(
+            guard.new_rule_names({"tool_input": {"command": ["apply_patch", patch]}}),
+            {"new.md"},
         )
 
     def test_codex_update_only_patch_does_not_renag(self) -> None:
@@ -195,7 +205,7 @@ class NewRuleNamesTests(unittest.TestCase):
         patch = "*** Begin Patch\n*** Update File: rules/existing.md\n*** End Patch\n"
         with mock.patch.object(guard, "untracked_rules", side_effect=AssertionError):
             self.assertEqual(
-                guard.new_rule_names({"tool_input": {"command": patch}}), set()
+                guard.new_rule_names({"tool_input": {"input": patch}}), set()
             )
 
 

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned exactly rather than to a floating major, same as uv.lock: the
+      # github-actions Dependabot ecosystem bumps these. (setup-uv publishes no
+      # floating v9 tag anyway — only v9.0.0.)
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@v9.0.0
+
+      # No python-version input on purpose: .python-version pins 3.14.3 and
+      # `uv sync` installs it. One home for the fact.
+      # It must resolve to 3.14+: two hooks use PEP 758 unparenthesized
+      # `except A, B:`, which is a SyntaxError on 3.13 and earlier.
+      - run: uv sync --locked
+
+      # The hook fixes; CI verifies. These must never mutate the tree.
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run ty check
+      - run: uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'
+
+      # validate_rules.py is a Stop hook, so it only fires for agents. This
+      # catches a rule edited in the GitHub web UI or committed with --no-verify.
+      - run: uv run python .claude/hooks/validate_rules.py
