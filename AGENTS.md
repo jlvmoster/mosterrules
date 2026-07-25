@@ -18,11 +18,11 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 
 ## Conventions
 - Use `uv` for all dependency and environment operations; do not call `pip` directly.
-- Run `ruff check`, `ruff format`, and `ty check` before committing.
+- Run `ruff check`, `ruff format`, `ty check`, and the test suite before committing — CI runs all four, so run them locally first.
 - Type checking uses [ty](https://docs.astral.sh/ty/) (not mypy/pyright). The `astral` plugin wires ty as the editor language server; `uv run ty check` is the CLI gate. Fix type errors rather than suppressing them; if you must suppress, use a rule-specific `# ty: ignore[rule]`.
 
 ## Testing
-- Each hook script has a stdlib `unittest` suite beside it in `.claude/hooks/test_*.py` (`validate_rules`, `guard_new_rule`, `curate_rules`): `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'`. They aren't wired into a hook or CI gate — run them after touching a hook. Follow [Test-Driven Development](rules/test-driven-development.md): write the failing test first, or when adding tests to existing code, mutate the code to confirm the new test actually goes red.
+- Each hook script has a stdlib `unittest` suite beside it in `.claude/hooks/test_*.py`: `uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'` (note the `-s` — the hooks dir is hidden and has no `__init__.py`). No hook runs them, but [CI](.github/workflows/ci.yml) does on every push and PR. Follow [Test-Driven Development](rules/test-driven-development.md): write the failing test first, or when adding tests to existing code, mutate the code to confirm the new test actually goes red.
 - No `pytest` is configured; there is no `uv run pytest` workflow until one is added.
 
 ## Automated checks (hooks)
