@@ -26,7 +26,7 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 - No `pytest` is configured; there is no `uv run pytest` workflow until one is added.
 
 ## Adding or editing a rule
-- Run **`/new-rule`** — it scaffolds the canonical shape and registers the rule in `rules/README.md`. It's user-invoked only (it writes files), so nothing will suggest it for you.
+- Run **`/new-rule` in Claude Code or `$new-rule` in Codex** — it scaffolds the canonical shape and registers the rule in `rules/README.md`. It's user-invoked only (it writes files), so nothing will suggest it for you.
 - **`rule-reviewer`** judges *one* rule for substance and house style — dispatch it yourself before committing a new or reworked rule. **`rule-curator`** reviews the *corpus* for ripple effects (reciprocal `## Related` links, emergent overlap, voice drift); the Stop hook prompts for it automatically whenever `rules/` changes. Both are read-only and propose rather than edit.
 
 ## Automated checks (hooks)
