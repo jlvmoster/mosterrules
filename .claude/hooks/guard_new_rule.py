@@ -99,16 +99,27 @@ def untracked_rules() -> set[str]:
     return names
 
 
-# Codex's apply_patch delivers the raw patch as tool_input.command (no file_path);
-# it introduces new files with "*** Add File: <path>" markers we can read directly.
+# Codex's apply_patch delivers the raw patch instead of a file_path; it introduces
+# new files with "*** Add File: <path>" markers we can read directly.
 ADD_FILE_RE = re.compile(r"^\*\*\* Add File: (.+)$", re.MULTILINE)
 
 
 def patch_text(payload: dict) -> str:
-    """The apply_patch body carried on tool_input.command, or '' if absent."""
+    """The apply_patch body, or '' if absent.
+
+    Freeform apply_patch carries it on `input`; the JSON tool schema uses
+    `command` as ["apply_patch", "<patch>"]. Both are checked because the
+    shape depends on which tool variant the model picked.
+    """
     tool_input = payload.get("tool_input")
-    if isinstance(tool_input, dict) and isinstance(tool_input.get("command"), str):
-        return tool_input["command"]
+    if not isinstance(tool_input, dict):
+        return ""
+    for value in (tool_input.get("input"), tool_input.get("command")):
+        if isinstance(value, str):
+            return value
+        if isinstance(value, list):
+            # ADD_FILE_RE is MULTILINE, so the leading "apply_patch" element is inert.
+            return "\n".join(v for v in value if isinstance(v, str))
     return ""
 
 

@@ -12,7 +12,8 @@
       "Bash(uv run python .claude/hooks/curate_rules.py:*)"
     ],
     "deny": [
-      "Edit(uv.lock)"
+      "Edit(uv.lock)",
+      "Write(uv.lock)"
     ]
   },
   "hooks": {
@@ -22,13 +23,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run ruff check --fix . && uv run ruff format . && uv run ty check"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && uv run ruff check --fix . && uv run ruff format . && uv run ty check"
+          },
           {
             "type": "command",
             "command": "uv run python \"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard_new_rule.py\""
