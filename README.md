@@ -1,6 +1,6 @@
 # mosterrules
 
-The **Moster Rules** — principles for *Agentic Software Engineering* (building software *with* AI agents and *for* a world where agents read, write, and run your code), plus a minimal [`uv`](https://docs.astral.sh/uv/)-managed Python scaffold wired for [Claude Code](https://claude.com/claude-code).
+The **Moster Rules** — principles for *Agentic Software Engineering* (building software *with* AI agents and *for* a world where agents read, write, and run your code), plus the [`uv`](https://docs.astral.sh/uv/)-managed toolchain that enforces them in [Claude Code](https://claude.com/claude-code) and Codex.
 
 ## What's here
 
@@ -12,7 +12,6 @@ The **Moster Rules** — principles for *Agentic Software Engineering* (building
 | [`.claude/`](.claude/) | Claude Code settings: permissions, hooks, agents, the `new-rule` skill, and recommended plugins |
 | [`.codex/`](.codex/) | Codex hooks, agents, and skill — mirrors `.claude/` |
 | [`.github/`](.github/) | CI workflow and Dependabot config |
-| `main.py` | Entry point |
 | `pyproject.toml` / `uv.lock` | Dependencies and pinned lockfile (managed by `uv`) |
 
 ## The Moster Rules
@@ -25,7 +24,6 @@ See [`rules/README.md`](rules/README.md) for the full index and the shape every 
 
 ```sh
 uv sync            # create the venv and install dependencies
-uv run main.py     # run the app
 ```
 
 The full command list and the conventions that go with it live in [AGENTS.md](AGENTS.md#common-commands) — one home, so they can't drift.

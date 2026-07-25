@@ -1,6 +1,6 @@
 # mosterrules
 
-The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md`](rules/README.md) for the index and per-rule format before adding or editing a rule. The rest is a Python scaffold managed with [uv](https://docs.astral.sh/uv/); entry point is `main.py`.
+The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md`](rules/README.md) for the index and per-rule format before adding or editing a rule. The rest is the Python toolchain that enforces them, managed with [uv](https://docs.astral.sh/uv/); the code lives in `.claude/hooks/`.
 
 ## Environment
 - Python **3.14.3** (pinned in `.python-version`)
@@ -8,7 +8,6 @@ The repo's product is the **Moster Rules** in `rules/` — see [`rules/README.md
 
 ## Common commands
 - Sync deps / create venv: `uv sync`
-- Run the app: `uv run main.py`
 - Lint: `uv run ruff check .`
 - Format: `uv run ruff format .`
 - Type check: `uv run ty check`

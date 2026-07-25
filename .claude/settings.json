@@ -3,7 +3,6 @@
   "permissions": {
     "allow": [
       "Bash(uv sync:*)",
-      "Bash(uv run main.py:*)",
       "Bash(uv run ruff:*)",
       "Bash(uv run ty:*)",
       "Bash(uv run python -m unittest:*)",
