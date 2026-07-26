@@ -38,6 +38,7 @@ def git_status() -> str:
         ["git", "-C", str(ROOT), "status", "--porcelain", "--", "rules"],
         capture_output=True,
         text=True,
+        check=False,
     )
     return result.stdout
 

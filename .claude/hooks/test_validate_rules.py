@@ -229,9 +229,11 @@ class MainExitTests(unittest.TestCase):
     def test_blocks_whenever_there_are_errors(self) -> None:
         # Regression guard for the stop_hook_active hole: validation must block on
         # drift even inside a Stop continuation (a second Stop hook can set the flag).
-        with mock.patch.object(vr, "validate", return_value=["some drift"]):
-            with contextlib.redirect_stderr(io.StringIO()):
-                self.assertEqual(vr.main(), 2)
+        with (
+            mock.patch.object(vr, "validate", return_value=["some drift"]),
+            contextlib.redirect_stderr(io.StringIO()),
+        ):
+            self.assertEqual(vr.main(), 2)
 
     def test_clean_tree_allows_stop(self) -> None:
         with mock.patch.object(vr, "validate", return_value=[]):
