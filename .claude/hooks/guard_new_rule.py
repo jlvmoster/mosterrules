@@ -67,6 +67,7 @@ def is_tracked(path: str) -> bool:
     result = subprocess.run(
         ["git", "-C", str(ROOT), "ls-files", "--error-unmatch", rel],
         capture_output=True,
+        check=False,
     )
     return result.returncode == 0
 
@@ -90,6 +91,7 @@ def untracked_rules() -> set[str]:
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
     names = set()
     for line in result.stdout.splitlines():
