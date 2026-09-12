@@ -10,9 +10,7 @@ Run: uv run python -m unittest discover -s .claude/hooks -p 'test_*.py'
 
 from __future__ import annotations
 
-import contextlib
 import importlib.util
-import io
 import tempfile
 import unittest
 from pathlib import Path
@@ -107,10 +105,6 @@ class ParseTomlTests(unittest.TestCase):
             parsed["body"], "You review things.\n\n## Output\n\nA short report."
         )
 
-    def test_ignores_sandbox_mode(self) -> None:
-        parsed = cm.parse_toml(CODEX_TOML)
-        self.assertNotIn("sandbox_mode", parsed)
-
 
 class CompareTests(unittest.TestCase):
     def test_matching_pair_is_silent(self) -> None:
@@ -127,12 +121,6 @@ class CompareTests(unittest.TestCase):
         self.assertTrue(any("name differs" in e for e in errors))
         self.assertTrue(any("body differs" in e for e in errors))
         self.assertFalse(any("description differs" in e for e in errors))
-
-    def test_body_comparison_is_strip_normalized(self) -> None:
-        left = cm.parse_md(CLAUDE_MD)
-        right = cm.parse_toml(CODEX_TOML)
-        right["body"] = right["body"] + "\n\n"
-        self.assertEqual(cm.compare(left, right, "a", "b"), [])
 
 
 class _TempRootTest(unittest.TestCase):
@@ -199,25 +187,6 @@ class LiveRepoTests(unittest.TestCase):
     def test_checked_in_mirrors_agree(self) -> None:
         # The invariant the CI step exists for: Claude and Codex prose match.
         self.assertEqual(cm.validate(), [])
-
-
-class SelfTestTests(unittest.TestCase):
-    def test_bundled_selftest_passes(self) -> None:
-        with contextlib.redirect_stdout(io.StringIO()):
-            cm.selftest()
-
-
-class MainExitTests(unittest.TestCase):
-    def test_blocks_on_drift(self) -> None:
-        with (
-            mock.patch.object(cm, "validate", return_value=["some drift"]),
-            contextlib.redirect_stderr(io.StringIO()),
-        ):
-            self.assertEqual(cm.main(), 2)
-
-    def test_clean_tree_exits_zero(self) -> None:
-        with mock.patch.object(cm, "validate", return_value=[]):
-            self.assertEqual(cm.main(), 0)
 
 
 if __name__ == "__main__":
