@@ -22,7 +22,6 @@ Agents are handed authority — API tokens, database credentials, tool access, s
 
 - **The agent's authority is the attacker's authority.** An agent processes untrusted text — a web page, an issue, an email — and prompt injection can turn its tools against you. Whatever the agent *can* do, a successful injection *will* do. A read-only, single-scope token makes the worst case small; an admin key makes it unbounded.
 - **Over-broad grants get used.** Just as "whatever a tool allows, an agent will do" ([anti-foot-gun](anti-foot-gun.md)), whatever access an agent *has*, it will eventually *exercise* — deleting, writing, or reaching a resource you never intended it to touch, because the credential let it.
-- **Volume multiplies a single over-grant.** One over-privileged credential wired into an agent that runs thousands of times is thousands of chances to misuse it. A human might touch the dangerous scope once and stop; an agent has no such brake.
 - **Standing privilege is a waiting liability.** Long-lived, broadly-scoped tokens sitting in an agent's environment are the thing that leaks — into logs, into context windows, into a subagent. Short-lived, narrow credentials are worth little if they escape and nothing if they've expired.
 
 ## How to apply

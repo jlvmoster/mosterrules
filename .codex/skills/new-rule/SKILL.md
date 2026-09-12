@@ -19,7 +19,9 @@ Create a new Moster Rule and wire it into the index in one step, matching the sh
    content — placeholders are not acceptable in a committed rule. Match the voice of the
    existing rules (`anti-foot-gun.md`, `idempotency.md`, `least-privilege.md`): define the
    term, state the core move, use concrete examples, keep a calibrated (not absolutist)
-   tone. Add a markdown table or a mermaid diagram only where it beats prose.
+   tone. Add a markdown table or a mermaid diagram only where it beats prose. In **Why it
+   matters**, write this rule's unique agentic angle — don't restate "no instinct / volume
+   multiplies edges" if another rule already taught it.
 
 3. **Register it in `rules/README.md`.** Append a row to the `## Rules` table, copying the
    blockquote **verbatim** into the Principle cell:
@@ -32,8 +34,8 @@ Create a new Moster Rule and wire it into the index in one step, matching the sh
 5. **Validate.** A `Stop` hook runs `validate_rules.py` at the end of the turn. To check
    now, run `uv run python .claude/hooks/validate_rules.py` and fix any reported drift.
 
-6. **Review (optional).** Dispatch the `rule-reviewer` subagent (`$rule-reviewer`) for a
-   substance-and-style pass the structural hook can't do.
+6. **Review (optional).** Dispatch the `rule-reviewer` subagent (`/rule-reviewer` or
+   `$rule-reviewer`) for a substance-and-style pass the structural hook can't do.
 
 ## Template
 
@@ -48,7 +50,7 @@ Create a new Moster Rule and wire it into the index in one step, matching the sh
 
 ## Why it matters for agentic development
 
-<Why agents make this acute — speed, volume, no instinctive caution, untrusted input.>
+<This rule's unique reason agents make it acute — not the generic "no instinct / volume" lecture.>
 
 - **<Point>.** <...>
 

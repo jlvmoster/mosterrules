@@ -12,9 +12,9 @@ The move is to treat the record as a **first-class output of the work, not a deb
 
 ## Why it matters for agentic development
 
-An agent acts fast, in volume, and out of anyone's direct sight. The trace is often the *only* window into what it actually did.
+An agent acts out of anyone's direct sight. The trace is often the *only* window into what it actually did.
 
-- **Volume hides the one bad run.** An agent performs an operation thousands of times; the single run that misfired is invisible unless every run leaves a record you can search. There's no human in the loop to remember "that one looked off."
+- **Volume hides the one bad run.** An agent performs an operation thousands of times; the single run that misfired is invisible unless every run leaves a record you can search.
 - **You can't reproduce what you can't see.** Debugging an agent's mistake means reconstructing the sequence that led to it — which inputs, which tool calls, which branch. Without a trace, the failure is a black box, and re-running rarely reproduces the exact conditions ([determinism](determinism.md) helps, but only what's recorded can be replayed).
 - **Detection is the other half of containment.** [least-privilege](least-privilege.md) *limits* how far a compromised or confused agent can reach; the trace is how you *notice* it reached, and reconstruct the blast radius afterward. Prevention without detection means the one breach you didn't prevent goes unseen.
 - **Attribution needs identity.** When many agents and subagents act, "who did this?" only has an answer if each action records the actor and the request it served.

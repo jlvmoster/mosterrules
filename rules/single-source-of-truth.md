@@ -14,7 +14,7 @@ The move is to **make the copies unable to drift**: generate them from the sourc
 
 Agents run on context, and context is copies — a value pasted into a prompt, a fact recalled from a summary, a duplicated snippet of config. An agent has no way to tell a *current* copy from a *stale* one.
 
-- **Stale context reads as confident truth.** An agent acts on the value in front of it with full conviction, whether it's fresh or three versions old. It can't feel the doubt that makes a human go "wait, is this still right?" — so a stale duplicate becomes a confident wrong action.
+- **Stale context reads as confident truth.** An agent acts on the value in front of it with full conviction, whether it's fresh or three versions old. A stale duplicate becomes a confident wrong action.
 - **Agents multiply copies.** Summarizing, restating, and pasting facts across files and subagents is what agents *do* — each copy a new place to drift out of sync with the source.
 - **Divergence is silent until it bites.** Two representations of one fact can disagree for a long time before anything notices; the agent building on the wrong one inherits the error with no signal.
 - **A generated artifact edited by hand is the classic trap.** An agent "fixes" a value in a derived file (a lockfile, a build output, a mirrored index); the real source is untouched, the next regeneration reverts it, and the two now disagree — which is why edits belong to the tool that owns the artifact ([anti-foot-gun](anti-foot-gun.md)).
@@ -37,7 +37,7 @@ Centralizing has real costs. A single home can become a bottleneck or a single p
 
 ## Related
 
-- [Idempotency](idempotency.md) — Idempotency leans on durable state as the truth so one *operation* converges to a target; SSOT is about each *fact* having one home so its copies can't drift. Related instinct — trust one authority — on different objects: an operation's result versus a fact's representations.
+- [Idempotency](idempotency.md) — Idempotency leans on durable state as the truth so one *operation* converges to a target; SSOT is about each *fact* having one home so its copies can't drift. Same move — trust one authority — on different objects: an operation's result versus a fact's representations.
 - [Anti-Foot-Gun](anti-foot-gun.md) — routing edits of a generated artifact through the tool that owns it is SSOT made structural: the derived copy is un-editable by hand, so it can't diverge from its source.
 - [Verifiability](verifiability.md) — SSOT gives a fact one *authoritative* home; Verifiability checks that home is *correct*. Authoritative isn't the same as right.
 

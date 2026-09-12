@@ -17,7 +17,6 @@ An agent's default failure mode is declaring victory. It will say "Done — the 
 - **Fluent ≠ correct.** A model produces plausible prose about success as easily as the success itself. Confidence carries no information about whether the work landed; only an external check does.
 - **Unverified errors compound.** An agent that trusts its own "it worked" builds the next step on a broken one, and the next on that. A closed loop stops the chain at the first failure; an open loop ships a tower of them.
 - **The evidence has to be reachable.** Agents act through tools, so "observable" means observable *to a tool* — an exit code, a returned row, a status field, a re-read file — not a screenshot a human happens to glance at.
-- **Volume rewards the loop.** A person spot-checks a handful of results and notices a pattern. An agent runs the operation hundreds of times; the only thing that catches the one run that silently failed is a check that runs every time.
 
 ## How to apply
 
@@ -38,10 +37,11 @@ Verification costs time and machinery, and not every step earns a full harness �
 ## Related
 
 - [Anti-Foot-Gun](anti-foot-gun.md) — fail-loud keeps a wrong value from *propagating*; Verifiability is the up-front, closed-loop check that the value is *right* in the first place.
+- [Distrust Input](distrust-input.md) — the evidence channel still crosses a trust boundary: Distrust owns the parse, Verifiability owns the closed loop. Don't treat the agent's own "it worked" as either.
 - [Determinism](determinism.md) — an exact-match check needs a result that doesn't change run to run; where it legitimately varies, verify by invariant, range, or property instead. Reproducible-but-wrong is still wrong — Determinism gives repeatability, Verifiability gives correctness.
 - [Leave a Trace](leave-a-trace.md) — Verifiability proves success *now*, in the loop; Leave a Trace is the durable record that lets you reconstruct it *later*.
 - [Single Source of Truth](single-source-of-truth.md) — SSOT makes a fact *authoritative*; Verifiability checks it's actually *correct* — one authoritative home can still hold a wrong value.
-- [Test-Driven Development](test-driven-development.md) — its most direct specialization: Verifiability is the *what* (define success, check it with independent evidence); TDD is one disciplined *when* — write the check first and watch it fail before the code exists. You can verify without testing first; you can't do TDD without verifying.
+- [Test-Driven Development](test-driven-development.md) — its most direct specialization: Verifiability is the *what* (define success, check it with independent evidence); TDD is one disciplined *when* — write the check first. You can verify without testing first; you can't do TDD without verifying.
 
 ## References
 

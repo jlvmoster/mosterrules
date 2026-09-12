@@ -16,8 +16,8 @@ Agents make complexity historically cheap to *produce* and just as expensive as 
 
 - **Generation is nearly free; comprehension is not.** An agent emits a factory, an interface, and three layers of indirection as fast as it emits one function. The cost didn't vanish — it moved downstream to every future reader, human or agent, who must now hold all of it in their head to change anything.
 - **Speculative flexibility is the default failure.** Asked for one thing, an agent readily builds the general version "to be safe." That extra surface is where the next agent gets lost, mis-wires a call, or duplicates what's already there because it couldn't find it under the machinery.
-- **More surface, more blast radius.** Every layer is more places for a bug to hide and more interface an agent can misuse — the same instinct as [least-privilege](least-privilege.md) (grant no more than needed) and [anti-foot-gun](anti-foot-gun.md) (fewer sharp edges), applied to how much you *build at all*.
-- **Agents can't feel bloat.** A human senses when a codebase has grown too clever to hold; an agent will cheerfully extend an over-engineered design further in its own idiom, compounding it.
+- **More surface, more blast radius.** Every layer is more places for a bug to hide and more interface an agent can misuse — [least-privilege](least-privilege.md) and [anti-foot-gun](anti-foot-gun.md) own the authority/shape cuts; this rule is how much you *build at all*.
+- **Agents can't feel bloat.** An agent will cheerfully extend an over-engineered design further in its own idiom, compounding it.
 
 ## How to apply
 

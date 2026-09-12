@@ -12,12 +12,10 @@ The strongest version makes invalid input *unrepresentable past the edge*: parse
 
 ## Why it matters for agentic development
 
-An agent runs on input it doesn't control and feeds it straight into tools that act. A person eyes a phishing email and hesitates; an agent reads it mid-task and calls a tool.
+An agent runs on input it doesn't control and feeds it straight into tools that act.
 
 - **The input is the attack surface.** A web page, an issue, a code comment, or another tool's output carries instructions, and an agent that treats all text as equally trustworthy acts on them. Prompt injection is the case structural validation *can't* close: a payload that reads as perfectly valid natural language passes every schema, so the defense shifts from parsing to **isolation** — keep untrusted text out of the instruction channel, don't hand it your tools, and gate risky actions behind [least-privilege](least-privilege.md) and human approval. Whatever the agent *would do* with input, an attacker who controls that input can *direct*.
-- **Untrusted text becomes trusted action.** The agent turns a value into a shell command, a SQL query, a file path, or a URL. Without a boundary check, a crafted value becomes injection, path traversal, or SSRF — the classic confusions, now reached automatically and at volume.
-- **No instinctive smell test.** A human notices an "order quantity" of `-1` or `99999999`, or a name field full of markup. An agent has no reflex of suspicion; it validates only what the code makes it validate.
-- **Volume turns rare into routine.** A malformed input a human hits once a month, an agent hits at scale — and its downstream tools inherit whatever the boundary let through.
+- **Untrusted text becomes trusted action.** The agent turns a value into a shell command, a SQL query, a file path, or a URL. Without a boundary check, a crafted value becomes injection, path traversal, or SSRF — the classic confusions, now reached automatically.
 
 ## How to apply
 
@@ -38,7 +36,7 @@ An agent runs on input it doesn't control and feeds it straight into tools that 
 
 ## Trade-offs
 
-Validation can be too strict: reject input a caller legitimately needs and you've built a footgun that trains people to route around the boundary — the [anti-foot-gun](anti-foot-gun.md) over-noisy-guardrail failure, at the front door. There's a real tension with Postel's law ("be liberal in what you accept"): liberal acceptance eases interop but widens the attack surface, and decades of security bugs came from parsers being *too* forgiving. Structure has a ceiling, too: a schema check catches malformed *data* but never a well-formed *instruction*, so free-form text bound for a model — the prompt-injection case — needs isolation and least privilege, not a stricter parser. Calibrate by consequence — validate strictly what will steer a command, a query, or a path; be more lenient with inert display data — and keep each schema next to the code that consumes it so it can't drift out of sync with reality.
+Validation can be too strict: reject input a caller legitimately needs and you've built a footgun that trains people to route around the boundary — the [anti-foot-gun](anti-foot-gun.md) over-noisy-guardrail failure, at the front door. There's a real tension with Postel's law ("be liberal in what you accept"): liberal acceptance eases interop but widens the attack surface, and decades of security bugs came from parsers being *too* forgiving. Structure has a ceiling, too: a schema check catches malformed *data* but never a well-formed *instruction*, so free-form text bound for a model — the prompt-injection case — needs isolation and least privilege, not a stricter parser. Calibrate by consequence — validate strictly what will steer a command, a query, or a path; be more lenient with inert display data — and keep the schema next to the code that consumes it ([single-source-of-truth](single-source-of-truth.md)) so the check can't drift from what the code actually accepts.
 
 ## Litmus test
 
@@ -48,6 +46,8 @@ Validation can be too strict: reject input a caller legitimately needs and you'v
 
 - [Least Privilege](least-privilege.md) — caps what a hijacked agent *can do*; Distrust Input governs what gets *in*. Together they are the security pair: bound the authority, and validate the input that might seize it.
 - [Anti-Foot-Gun](anti-foot-gun.md) — narrows the interface's *shape*; Distrust Input validates the *values* flowing through it, and shares the fail-loud reflex.
+- [Verifiability](verifiability.md) — tool and model output is untrusted *input* here and independent *evidence* there: validate the channel; don't accept the agent's prose as the check.
+- [Single Source of Truth](single-source-of-truth.md) — the schema that sits at the boundary is a fact with one home; a copy that drifts from the code is a check that lies.
 
 ## References
 
