@@ -33,3 +33,6 @@ jobs:
       # validate_rules.py is a Stop hook, so it only fires for agents. This
       # catches a rule edited in the GitHub web UI or committed with --no-verify.
       - run: uv run python .claude/hooks/validate_rules.py
+
+      # Claude agent/skill prose is the source; Codex counterparts must match.
+      - run: uv run python .claude/hooks/check_mirrors.py

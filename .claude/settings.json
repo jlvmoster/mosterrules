@@ -8,7 +8,8 @@
       "Bash(uv run python -m unittest:*)",
       "Bash(uv run python .claude/hooks/validate_rules.py:*)",
       "Bash(uv run python .claude/hooks/guard_new_rule.py:*)",
-      "Bash(uv run python .claude/hooks/curate_rules.py:*)"
+      "Bash(uv run python .claude/hooks/curate_rules.py:*)",
+      "Bash(uv run python .claude/hooks/check_mirrors.py:*)"
     ],
     "deny": [
       "Edit(uv.lock)",

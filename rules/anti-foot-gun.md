@@ -10,16 +10,15 @@ The key move is structural, not advisory. A comment that says "don't call this w
 
 ## Why it matters for agentic development
 
-Agents amplify footguns. They act fast, in volume, and without the situational caution a human applies on instinct. A sharp edge a careful developer steps around once a month, an agent will hit at scale and without hesitation:
+Agents amplify footguns: they take any path the interface leaves open, at speed, and they keep going after a quietly-wrong result.
 
-- **No instinctive caution.** An agent will happily run `rm -rf`, force-push, or drop a table if the interface lets it and nothing stops it. It does not feel the flicker of doubt a human feels.
 - **Documentation is weak protection.** Prose warnings buried in a README or a docstring are routinely out-of-context for an agent mid-task. Constraints that live in *types, tools, and gates* travel with the code; prose does not.
 - **Silent failure compounds.** An agent that gets a quietly-wrong result keeps building on it. A loud failure stops the chain; a silent one ships.
 - **The interface is the contract.** Whatever a tool, function, or command *allows*, an agent will eventually *do*. Narrow the interface and the wrong action becomes unrepresentable.
 
 ## How to apply
 
-- **Safe defaults.** The default behavior is the correct, conservative one; the dangerous behavior requires an explicit, deliberate flag (`--force`, `--no-verify`, `allow_destructive=True`). A mutable default argument (`def f(x=[])`) is the failure in miniature — the unsafe form is the path of least resistance; `def f(x=None)` then `if x is None: x = []` makes the safe form the default, and a linter flags the unsafe one (Ruff's `B006`, for instance).
+- **Safe defaults.** The default behavior is the correct, conservative one; the dangerous behavior requires an explicit, deliberate flag (`--force`, `--no-verify`, `allow_destructive=True`). A linter-flagged mutable default (Ruff `B006`) is the failure in miniature — the unsafe form is the path of least resistance.
 - **Make misuse a hard error.** Push violations as early as possible: a type error, a lint rule, a failing CI gate, a schema rejection. Earlier and louder beats later and quieter.
 - **Constrain the interface.** Give agents and callers narrow, purpose-built tools instead of broad, powerful ones. A `delete_draft(id)` is safer than handing over raw SQL, and denying direct edits to a generated artifact (a lockfile, a build output) steers changes through the tool that owns it. Make illegal states unrepresentable — but only for invariants that genuinely never change, or it trades real flexibility for type-gymnastics.
 - **Require explicit opt-in for irreversible actions.** Deleting, overwriting, publishing, or sending to the outside world should demand confirmation or a distinct, intentional call — never a default or a side effect.
@@ -27,7 +26,6 @@ Agents amplify footguns. They act fast, in volume, and without the situational c
 
 | Footgun (easy, unsafe) | Why it bites an agent | Structural fix (safe by default) |
 |---|---|---|
-| `def f(x=[])` mutable default | shared state mutates across calls, silently | `def f(x=None)` + `if x is None: x = []`; Ruff `B006` flags it |
 | "remember to close it" in a docstring | prose is out-of-context mid-task | scope-bound resource: context manager / `defer` / RAII |
 | raw SQL / admin connection handed over | whatever the interface allows, an agent will do | narrow tool: `delete_draft(id)`, not arbitrary SQL |
 | returns `[]` / `None` on a bad lookup | a quietly-wrong value propagates down the chain | raise or return an error — fail loud |
@@ -49,6 +47,8 @@ Failing loud is itself a per-component call: critical paths should fail fast, bu
 - [Least Privilege](least-privilege.md) — the same interface-narrowing move, applied to *authority* rather than *shape*.
 - [Distrust Input](distrust-input.md) — this narrows the interface's *shape*; Distrust Input validates the *values* that flow through it, and shares the fail-loud reflex.
 - [Verifiability](verifiability.md) — fail-loud stops a quietly-wrong value from propagating; Verifiability is the up-front, closed-loop check that the value is right.
+- [Leave a Trace](leave-a-trace.md) — fail-loud surfaces an error *in the moment*; the trace is the durable, queryable record you consult *afterward*.
+- [Test-Driven Development](test-driven-development.md) — a guard you can delete without a test going red is a footgun that only looks safe.
 - [Single Source of Truth](single-source-of-truth.md) — routing edits of a generated artifact through the tool that owns it is that rule made structural: the derived copy can't be hand-edited, so it can't drift from its source.
 
 ## References

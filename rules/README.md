@@ -2,7 +2,7 @@
 
 Principles for **Agentic Software Engineering** — building software *with* AI agents and *for* a world where agents read, write, and run your code.
 
-Each rule lives in its own kebab-case file and follows the same shape: an opening one-sentence `>` blockquote, then Principle, Why it matters for agentic development, How to apply, Trade-offs, Litmus test, Related, and References. `/new-rule` scaffolds it and [`validate_rules.py`](../.claude/hooks/validate_rules.py) enforces it. This file is the index — when you add a rule, add a row below and copy the rule's blockquote verbatim into its Principle cell.
+Each rule lives in its own kebab-case file. `/new-rule` scaffolds the shape [`validate_rules.py`](../.claude/hooks/validate_rules.py) enforces (opening blockquote, then the usual sections). This file is the index — when you add a rule, add a row below and copy the rule's blockquote verbatim into its Principle cell. Stable principles don't need the process re-taught on every edit; the hook still blocks if the shape drifts.
 
 ## Rules
 
@@ -16,5 +16,5 @@ Each rule lives in its own kebab-case file and follows the same shape: an openin
 | [Leave a Trace](leave-a-trace.md) | Make what happened legible after the fact. If you can't see what an actor did, you can't trust it, debug it, or contain it. |
 | [Minimum Necessary Complexity](minimum-necessary-complexity.md) | Build the smallest thing that meets a demonstrated need; add machinery only when reality earns it. |
 | [Single Source of Truth](single-source-of-truth.md) | Give each fact one authoritative home; derive, link, or validate every other representation. |
-| [Test-Driven Development](test-driven-development.md) | Write the failing test first, watch it fail, then write the code that makes it pass. The test is the specification; the code is what satisfies it. |
+| [Test-Driven Development](test-driven-development.md) | Write the failing test first. The test is the specification; the code is what satisfies it. |
 | [Verifiability](verifiability.md) | Define success before acting, then verify the result with independent, observable evidence — not the agent's own assertion. |

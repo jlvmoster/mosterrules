@@ -12,12 +12,11 @@ The move is to **pull every hidden input into the open**: pass the clock and the
 
 ## Why it matters for agentic development
 
-An agent can't shrug off flakiness the way a human does. A person re-runs a failing test, sees it pass, and moves on; an agent has no instinct for "probably just flaky" and no memory that it saw green a moment ago.
+An agent can't shrug off flakiness: it has no "probably just flaky," and no memory that it saw green a moment ago.
 
 - **Nondeterminism weakens verification.** A result that varies run to run has no stable target for an *exact-match* check ([verifiability](verifiability.md)) — you can still test invariants, ranges, or distributions, but the cheap, decisive "is it exactly this?" is gone. If "success" flickers, the agent can't tell a real regression from noise, and every downstream decision inherits the doubt.
 - **Flaky signals train the wrong reflex.** Faced with an intermittently-failing gate, an agent learns to retry until green — laundering a real failure into a pass, exactly the [anti-foot-gun](anti-foot-gun.md) over-noisy-guardrail trap.
 - **"Works here" doesn't transfer.** An agent generates code in one environment and it runs in another. Unpinned versions and ambient state mean the reproduction diverges from the original, and the bug that only appears in one is nearly impossible for an agent to chase.
-- **Volume surfaces every hidden input.** A one-in-a-thousand ordering fluke a human never notices, an agent running the operation thousands of times will hit — and act on.
 
 ## How to apply
 
@@ -29,8 +28,6 @@ An agent can't shrug off flakiness the way a human does. A person re-runs a fail
 
 | Hidden input | How it leaks | Make it declared |
 |---|---|---|
-| wall clock | `now()` mid-logic | pass `now` as an argument |
-| randomness | unseeded RNG | inject a seed; fix it in tests |
 | dependency drift | `^1.2` resolves fresh | lockfile with exact versions/digests |
 | iteration order | set/dict/filesystem order | sort before serialize or hash |
 | live network | fetch during compute | fetch at the edge; record and replay |
@@ -46,6 +43,7 @@ Full determinism isn't always reachable or worth it. Wall-clock time, real rando
 ## Related
 
 - [Idempotency](idempotency.md) — the sibling, on a different axis. Idempotency makes a repeated *side effect* harmless (a retried charge doesn't double); Determinism makes the same inputs produce the same *output*. One is about safe repetition of an effect, the other about reproducibility of a result — you can want either without the other.
+- [Anti-Foot-Gun](anti-foot-gun.md) — retry-until-green on a flaky gate is that rule's over-noisy-guardrail trap: the override becomes the default and a real failure gets laundered into a pass.
 - [Verifiability](verifiability.md) — an *exact-match* check needs a stable result, and Determinism is what gives it a fixed target; where output is legitimately variable, Verifiability falls back to checking invariants and properties instead.
 - [Leave a Trace](leave-a-trace.md) — both record for later, to different ends: Determinism records inputs to *reproduce a result*; Leave a Trace records events to *reconstruct what happened*. Replay versus audit.
 - [Test-Driven Development](test-driven-development.md) — red-green only carries information if the target holds still: a flaky test has no fixed red or green to drive from, so test-first quietly depends on a deterministic result to check against.

@@ -32,7 +32,6 @@ into a second side effect: a duplicate charge, a doubled message, a corrupted co
   "happened, response lost." Only an idempotent operation makes retrying safe.
 - **Interruption is routine.** Runs get cancelled and processes restart mid-task. Work that can't
   resume from a partial state is lost or corrupted.
-- **Volume multiplies it.** An edge a human hits once and notices, an agent hits hundreds of times, silently.
 
 ## How to apply
 
@@ -61,14 +60,9 @@ sequenceDiagram
 - **Design for interruption.** Assume the process can die anywhere. Use transactions or atomic writes so
   a partial run leaves no half-applied state, and checkpoint long work so it resumes instead of restarting.
 - **Make retry the safe default.** A tool should be retryable without the caller remembering whether it
-  already ran — the safety lives in the operation, not the caller's memory.
-
-| Non-idempotent | Idempotent |
-|---|---|
-| `INSERT` | `UPSERT` to a target value (not `+= 1`) / insert-then-confirm-on-conflict |
-| `add 1` to a counter | `set quantity = 5` (converge to target) |
-| accumulate in place | replay an append-only keyed ledger |
-| send email / charge card | same action gated by a caller idempotency key |
+  already ran — the safety lives in the operation, not the caller's memory. Side effects that leave
+  the system (email, charge) get a caller idempotency key; state changes converge (`UPSERT` / set-to-target)
+  instead of blindly applying a delta.
 
 ## Trade-offs
 
@@ -88,7 +82,7 @@ property you can't get.
 - [Anti-Foot-Gun](anti-foot-gun.md) — guardrails on the non-idempotent core when convergence isn't possible.
 - [Least Privilege](least-privilege.md) — cap the blast radius of a retry that does fire, not just whether it's safe.
 - [Determinism](determinism.md) — the sibling on a different axis: safe *repetition of a side effect* here, reproducibility of a *result* there.
-- [Single Source of Truth](single-source-of-truth.md) — Idempotency leans on durable state as the truth so one operation converges; SSOT applies that instinct to every *fact*, not one operation.
+- [Single Source of Truth](single-source-of-truth.md) — Idempotency leans on durable state as the truth so one operation converges; SSOT applies that move to every *fact*, not one operation.
 
 ## References
 

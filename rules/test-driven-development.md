@@ -1,47 +1,40 @@
 # Test-Driven Development
 
-> Write the failing test first, watch it fail, then write the code that makes it pass. The test is the specification; the code is what satisfies it.
+> Write the failing test first. The test is the specification; the code is what satisfies it.
 
 ## Principle
 
-Test-Driven Development inverts the usual order: the check comes *before* the code. You write a test that describes the behavior you want, run it and watch it fail for the reason you expect, then write the smallest code that turns it green — and only then, with a passing test as a safety net, do you refactor. Red, green, refactor, one small step at a time.
-
-The discipline lives in the *ordering*, not in the tests themselves. A test written after the code tends to assert whatever the code already does — it documents the implementation instead of constraining it, and it can't tell you the code was ever wrong because it never saw red. A test written first is a specification: it fails until the behavior exists, so the moment it passes carries real information. Watching it fail isn't ceremony — it's how you learn the test *can* fail, and fails for the right reason rather than a typo in the test itself.
+Test-Driven Development inverts the usual order: the check comes *before* the code. You write a test that describes the behavior you want, then the smallest code that makes it pass. The discipline lives in the *ordering*, not in the tests themselves. A test written after the code tends to assert whatever the code already does — it documents the implementation instead of constraining it.
 
 The move is to let the failing test *drive*: it names the next increment of behavior, gives the code a fixed target to hit, and — once green — becomes the fixture that lets you change the design without changing what it does.
 
 ## Why it matters for agentic development
 
-An agent's strongest instinct is to emit code that looks finished. Test-first aims that instinct at a fixed target instead of a feeling: the work isn't done when it reads right, it's done when a specific test that was red goes green.
+[Verifiability](verifiability.md) is the parent *what* — define success and check it with independent evidence. TDD is one disciplined *when*: write the check first. You can verify without testing first; you can't do TDD without verifying.
 
-- **Red-first defeats the vacuous test.** An agent told to "add tests" will happily write one that passes against the current code without exercising anything — a test that never failed proves nothing. Demanding it fail first, for the stated reason, is the only thing that shows it can catch a regression at all.
+- **Red-first defeats the vacuous test.** An agent told to "add tests" will happily write one that passes against the current code without exercising anything. A test that never failed proves nothing; deleting the implementation and seeing red is how you know it can catch a regression.
 - **The test is a spec a human can review.** For agent-written code a reviewer won't read line by line, the test states the intended behavior in a form they *can* check — and that re-runs on every future change, not just at review time.
-- **Small red-green steps bound the blast radius.** An agent that writes a large change and tests it at the end can't tell which part turned the suite red. One failing test at a time keeps every increment attributable and every rollback cheap.
-- **Green is the license to refactor.** An agent restructuring untested code is editing blind; a passing suite is the external signal that behavior survived the change, which is exactly what lets an agent simplify aggressively instead of leaving mess it's afraid to touch.
 
 ## How to apply
 
-- **Write the test before the code, and run it red.** State the behavior as a failing test first, then watch it fail. An unexpected green isn't a green light: either the behavior already exists — so this step needs no new code — or, more often, the test isn't exercising what you think. Find out which before you move on; don't write code to force a red you didn't actually get.
-- **Confirm it fails for the right reason.** Read the failure. A test that dies on an import error or a typo hasn't exercised the behavior; make it fail the way real broken code would, *then* make it pass.
+- **Write the test before the code.** State the behavior as a failing test first. An unexpected green means either the behavior already exists — so this step needs no new code — or the test isn't exercising what you think. Find out which before you write more code.
 - **Write the simplest code that goes green.** Build for the test in front of you, not the requirement you imagine next ([minimum-necessary-complexity](minimum-necessary-complexity.md)). The next test earns the next code.
-- **Refactor only under green.** Restructure with the suite passing before and after; if it goes red, the refactor changed behavior. Never add behavior and refactor in the same red bar.
 - **Test behavior, not implementation.** Assert the observable result — return value, emitted event, stored row — not the private steps taken to reach it. A test coupled to *how* the code works breaks on every refactor and stops being a safety net.
-- **One test, one reason to fail.** Keep each test focused so a red bar points at a single cause; a test that checks five things tells you the least about which one broke.
 
 ## Trade-offs
 
-Test-first is a real cost, not a free habit. It slows the first draft and forces you to commit to an interface before you've felt out the problem — for a genuine spike or throwaway exploration, writing tests first can be waste, and the honest move is to spike without them and delete the spike. Over-specified tests are their own trap: assert too much, or assert *how* instead of *what*, and the suite ossifies the design and screams on every legitimate refactor — a test that breaks when behavior didn't is negative value. And green is not correct: a suite of confident, wrong assertions (the weak-oracle problem [verifiability](verifiability.md)) buys false safety, which is worse than none because it ends scrutiny. Some behavior is genuinely hard to drive test-first — heavy UI, integration seams, real hardware — where the calibrated move is a thin test at the boundary plus manual verification, not a contortion to force red-green everywhere. Spend the discipline where a silent regression would cost the most.
+Test-first is a real cost: it slows the first draft and forces you to commit to an interface before you've felt out the problem. For a genuine spike, write tests after and delete the spike. Over-specified tests are their own trap — assert *how* instead of *what* and the suite screams on every legitimate refactor. And green is not correct: a suite of confident, wrong assertions (the weak-oracle problem [verifiability](verifiability.md)) buys false safety. Some behavior is genuinely hard to drive test-first — heavy UI, integration seams, real hardware — where the calibrated move is a thin test at the boundary plus manual verification. Spend the discipline where a silent regression would cost the most.
 
 ## Litmus test
 
-> Did I watch this test fail for the right reason before writing the code that makes it pass — and if I deleted the implementation, would the test go red?
+> If I deleted the implementation, would this test go red — and does it state intended behavior a reviewer can check without reading the code?
 
 ## Related
 
-- [Verifiability](verifiability.md) — the parent principle. Verifiability says define success and check it with independent evidence; TDD is the specific discipline that puts the check *first* and demands it fail before the code exists. Verifiability is the *what*; TDD is one disciplined *when* — you can verify without testing first, but you can't do TDD without verifying.
-- [Determinism](determinism.md) — red-green only carries information if the target holds still. A flaky test has no fixed red or green, so it can't drive anything; test-first quietly depends on a deterministic result to test against.
+- [Verifiability](verifiability.md) — the parent principle. Verifiability is the *what* (define success, check it with independent evidence); TDD is one disciplined *when*.
+- [Determinism](determinism.md) — red-green only carries information if the target holds still. A flaky test has no fixed red or green, so it can't drive anything.
 - [Minimum Necessary Complexity](minimum-necessary-complexity.md) — TDD's engine for YAGNI: the simplest-code-to-pass step and the rule that the next test earns the next code keep you from building machinery no test demands.
-- [Anti-Foot-Gun](anti-foot-gun.md) — watching a guard's test fail first proves the guard actually fires; a safety check you never saw reject bad input is a footgun that only looks safe.
+- [Anti-Foot-Gun](anti-foot-gun.md) — a guard's test that goes red when the guard is removed proves it actually fires; a safety check that never rejected bad input is a footgun that only looks safe.
 
 ## References
 

@@ -16,9 +16,9 @@ Read the rule under review, then read the other files in `rules/` for context an
 1. **House voice.** Matches the existing rules: defines the term, states the core move, uses
    concrete examples, stays calibrated rather than absolutist. Use `anti-foot-gun.md`,
    `idempotency.md`, and `least-privilege.md` as the bar.
-2. **Agentic framing.** "Why it matters for agentic development" gives reasons genuinely
-   acute *for agents* (speed, volume, no instinctive caution, untrusted input) — not generic
-   good-practice boilerplate that would read the same in any style guide.
+2. **Agentic framing.** "Why it matters for agentic development" gives this rule's unique
+   reason agents make it acute — not generic good-practice boilerplate, and not a restatement
+   of "no instinct / volume multiplies edges" that every other rule already taught.
 3. **Trade-offs earns its place.** Names a real cost or a genuine "when to relax," not the
    principle restated in reverse.
 4. **Litmus test is crisp.** One memorable question that operationalizes the rule; not a
