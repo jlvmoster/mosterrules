@@ -6,7 +6,6 @@ Format-specific keys (Claude `tools` / `disable-model-invocation`, Codex
 `sandbox_mode` / `agents/openai.yaml`) stay local and are not compared.
 
 Exit 2 with messages on stderr when anything drifts.
-Run with --selftest to exercise the parsers on synthetic input.
 """
 
 from __future__ import annotations
@@ -48,17 +47,12 @@ def parse_toml(text: str) -> dict[str, str]:
     }
 
 
-def parse_file(path: Path) -> dict[str, str]:
-    text = path.read_text(encoding="utf-8")
-    return parse_toml(text) if path.suffix == ".toml" else parse_md(text)
-
-
 def compare(
     left: dict[str, str], right: dict[str, str], left_path: str, right_path: str
 ) -> list[str]:
     errors: list[str] = []
     for key in COMPARED:
-        if left[key].strip() != right[key].strip():
+        if left[key] != right[key]:
             errors.append(f"{left_path} ↔ {right_path}: {key} differs")
     return errors
 
@@ -79,13 +73,6 @@ def expected_pairs(root: Path) -> list[tuple[Path, Path]]:
     return pairs
 
 
-def _rel(root: Path, path: Path) -> str:
-    try:
-        return str(path.relative_to(root))
-    except ValueError:
-        return str(path)
-
-
 def validate() -> list[str]:
     root = ROOT
     pairs = expected_pairs(root)
@@ -94,49 +81,41 @@ def validate() -> list[str]:
     for left, right in pairs:
         if not right.is_file():
             errors.append(
-                f"{_rel(root, right)}: missing Codex counterpart of {left.name}"
+                f"{right.relative_to(root)}: missing Codex counterpart of {left.name}"
             )
             continue
+        left_text = left.read_text(encoding="utf-8")
+        right_text = right.read_text(encoding="utf-8")
         errors.extend(
             compare(
-                parse_file(left),
-                parse_file(right),
-                _rel(root, left),
-                _rel(root, right),
+                parse_toml(left_text)
+                if left.suffix == ".toml"
+                else parse_md(left_text),
+                parse_toml(right_text)
+                if right.suffix == ".toml"
+                else parse_md(right_text),
+                str(left.relative_to(root)),
+                str(right.relative_to(root)),
             )
         )
     agents_dir = root / ".codex" / "agents"
     if agents_dir.is_dir():
         for toml in sorted(agents_dir.glob("*.toml")):
             if toml.resolve() not in expected_codex:
-                errors.append(f"{_rel(root, toml)}: Codex agent has no Claude source")
+                errors.append(
+                    f"{toml.relative_to(root)}: Codex agent has no Claude source"
+                )
     skills_dir = root / ".codex" / "skills"
     if skills_dir.is_dir():
         for skill_md in sorted(skills_dir.glob("*/SKILL.md")):
             if skill_md.resolve() not in expected_codex:
                 errors.append(
-                    f"{_rel(root, skill_md)}: Codex skill has no Claude source"
+                    f"{skill_md.relative_to(root)}: Codex skill has no Claude source"
                 )
     return errors
 
 
-def selftest() -> None:
-    md = parse_md("---\nname: x\ndescription: y\n---\n\nBody.\n")
-    assert md == {"name": "x", "description": "y", "body": "Body."}, md
-    toml = parse_toml(
-        'name = "x"\ndescription = "y"\ndeveloper_instructions = "Body."\n'
-    )
-    assert toml == {"name": "x", "description": "y", "body": "Body."}, toml
-    assert compare(md, toml, "a", "b") == []
-    drifted = dict(toml, body="Other.")
-    assert compare(md, drifted, "a", "b")
-    print("selftest ok")
-
-
 def main() -> int:
-    if "--selftest" in sys.argv:
-        selftest()
-        return 0
     errors = validate()
     if errors:
         print("Claude↔Codex mirror check failed:", file=sys.stderr)
